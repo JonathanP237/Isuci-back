@@ -3,7 +3,7 @@ import pg from 'pg';
 import { config } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
-import bcrypt from 'bcrypt';
+//import bcrypt from 'bcrypt';
 
 config();
 
