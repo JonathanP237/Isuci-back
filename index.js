@@ -2,11 +2,11 @@
 import pg from 'pg';
 import { config } from 'dotenv';
 import express from 'express';
+import bodyParser from 'body-parser';
 
 config();
 
 const PORT = process.env.PORT || 3001;
-const bodyParser = require('body-parser');
 const app = express();
 const bcrypt = require('bcrypt');
 const idUsuarioActual = null;
