@@ -3,12 +3,12 @@ import pg from 'pg';
 import { config } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
+import bcrypt from 'bcrypt';
 
 config();
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-const bcrypt = require('bcrypt');
 const idUsuarioActual = null;
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
