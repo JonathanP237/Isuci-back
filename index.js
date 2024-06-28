@@ -21,6 +21,11 @@ app.get("/ping", async(req, res) => {
   return res.json(result.rows[0]);
 });
 
+app.get("/test", async(req, res) => {
+  const result = await pool.query("SELECT * FROM usuario WHERE idtipousuario = 4 AND generousuario = 'M'");
+  return res.json(result.rows);
+});
+
 app.post("/login", (req, res) => {
   if(err){
     return res.json({ message: "Error al realizar el loggueo. Intente de nuevo." });
