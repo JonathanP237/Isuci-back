@@ -52,40 +52,6 @@ app.get("/ping", async (req, res) => {
   return res.json(contrasenas);
 });*/
 
-app.get("/test", async (req, res) => {
-  try {
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-      const users = await client.query("SELECT * FROM usuario");
-      
-      const saltRounds = 10; // Define saltRounds aquí
-
-      for (const user of users.rows) {
-        const hashedPassword = await bcrypt.hash(user.contrasenausuario, saltRounds);
-        try {
-          await client.query("UPDATE usuario SET contrasenausuario = $1 WHERE idusuario = $2", [hashedPassword, user.idusuario]);
-        } catch (updateError) {
-          console.error(`Error al actualizar el usuario con ID: ${user.idusuario}`, updateError.message);
-          throw updateError; // Lanza el error para manejarlo en el bloque catch exterior
-        }
-      }
-      
-      await client.query('COMMIT');
-      return res.json({ message: "Contraseñas actualizadas correctamente" });
-    } catch (error) {
-      await client.query('ROLLBACK');
-      console.error("Error durante la transacción, haciendo ROLLBACK.", error.message);
-      throw error; // Lanza el error para manejarlo en el bloque catch exterior
-    } finally {
-      client.release();
-    }
-  } catch (error) {
-    console.error("Error al conectar con la base de datos o durante la operación:", error.message);
-    return res.status(500).json({ error: "Error al actualizar las contraseñas", detalles: error.message });
-  }
-});
-
 app.post("/login", async (req, res) => {
   //const { usuario, password, recaptchaToken } = req.body;
   const { usuario, password} = req.body;
