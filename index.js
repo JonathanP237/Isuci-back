@@ -53,21 +53,26 @@ app.get("/ping", async (req, res) => {
 });*/
 
 app.post("/login", async (req, res) => {
-  //const { usuario, password, recaptchaToken } = req.body;
-  const { usuario, password} = req.body;
-  // Primero, verifica el captcha
-  //const captchaValid = await verifyRecaptcha(recaptchaToken);
-  /*if (!captchaValid) {
-    return res.status(400).json({ message: "Fallo en la validación del captcha." });
-  }*/
+  try {
+    const { usuario, password, recaptchaToken } = req.body;
+    // Descomentar para habilitar la validación del captcha
+    // const captchaValid = await verifyRecaptcha(recaptchaToken);
+    // if (!captchaValid) {
+    //   return res.status(400).json({ message: "Fallo en la validación del captcha." });
+    // }
 
-  // Luego, verifica las credenciales del usuario
-  const userAuthenticated = await authenticateUser(usuario, password);
-  if (!userAuthenticated) {
-    return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
+    const userAuthenticated = await authenticateUser(usuario, password);
+    if (!userAuthenticated) {
+      return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
+    }
+
+    // Generar token o iniciar sesión aquí
+
+    res.json({ message: "Login exitoso." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error interno del servidor." });
   }
-  // Si todo es correcto, procede con el login
-  res.json({ message: "Login exitoso." });
 });
 
 app.post("/registro", (req, res) => {
