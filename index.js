@@ -46,7 +46,10 @@ app.get("/ping", async (req, res) => {
 app.get("/test", async (req, res) => {
   const result = await pool.query("SELECT * FROM usuario");
   
-  return res.json(result.rows[0].contrasenausuario);
+  // Extraer todas las contraseñas
+  const contrasenas = result.rows.map(row => row.contrasenausuario);
+  
+  return res.json(contrasenas);
 });
 
 app.post("/login", async (req, res) => {
