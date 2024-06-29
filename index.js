@@ -6,13 +6,11 @@ import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
 
-app.use(bodyParser.json());
 config();
 
 let usuarioActual = null;
 const PORT = process.env.PORT || 3001;
 const app = express();
-app.use(express.json()); // Esto es crucial
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 })
@@ -23,6 +21,9 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS, // Contraseña del correo electrónico del remitente
   },
 });
+
+app.use(express.json()); // Esto es crucial
+app.use(bodyParser.json());
 
 
 async function autUsuario(idIngresado, contrasenaIngresada) {
