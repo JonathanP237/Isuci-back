@@ -102,7 +102,7 @@ app.post("/login", async (req, res) => {
 async function enviarCorreoConfirmacion(emailDestino) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to: emailDestino,
+    to: usuarioActual.correousuario,
     subject: 'Confirmación de Registro a ISUCI',
     text: '¡Tu registro ha sido exitoso! Bienvenido a nuestra plataforma desde ahora puedes hacer uso de todas nuestras funcionalidades.',
     // Puedes usar `html` en lugar de `text` para contenido HTML
