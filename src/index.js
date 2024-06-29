@@ -1,5 +1,6 @@
 // server/index.js
 import pg from 'pg';
+import { API_VERSION, PORT } from "./config/config.js";
 import { config } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -8,6 +9,7 @@ import bcrypt from 'bcrypt';
 config();
 
 const PORT = process.env.PORT || 3001;
+const API_PREFIX = 'api';
 const app = express();
 let usuarioActual = null;
 const pool = new pg.Pool({
@@ -15,6 +17,13 @@ const pool = new pg.Pool({
 })
 
 app.use(bodyParser.json());
+
+app.use(`/${API_PREFIX}/${API_VERSION}/alive`, (req, res) => {
+  res.json({
+    ok: true, 
+    message: `API IS ALIVE AND UP RUNING IN PORT: ${PORT}`, 
+  });
+});
 
 async function autUsuario(idIngresado, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
@@ -97,10 +106,16 @@ app.post("/registro", (req, res) => {
   res.json({ message: "Registro exitoso." });
 });
 
-app.get("/perfil", (req, res) => {
-});
+app.get("/perfil/:iddocumento", (req, res) => {
+  if (!usuarioActual) {
+    return res.status(401).json({ message: "No has iniciado sesión." });
+  }
+  
+  // Asegurarse de que el iddocumento del usuarioActual coincide con el parámetro de la ruta
+  if (req.params.iddocumento !== usuarioActual.iddocumento) {
+    return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
+  }
 
-app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
+  return res.json(usuarioActual);
 });
 
