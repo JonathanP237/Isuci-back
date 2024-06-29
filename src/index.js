@@ -8,6 +8,7 @@ import bcrypt from 'bcrypt';
 
 config();
 
+const PORT = process.env.PORT || 3001;
 const API_PREFIX = 'api';
 const app = express();
 let usuarioActual = null;
@@ -17,13 +18,13 @@ const pool = new pg.Pool({
 
 app.use(bodyParser.json());
 
-app.use(`/${API_PREFIX}/${API_VERSION}/alive`, (req, res) => {
+/*app.use(`/${API_PREFIX}/${API_VERSION}/alive`, (req, res) => {
   res.json({
     ok: true, 
     message: `API IS ALIVE AND UP RUNING IN PORT: ${PORT}`, 
   });
 });
-
+*/
 async function autUsuario(idIngresado, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
   if (result.rows.length > 0) {
