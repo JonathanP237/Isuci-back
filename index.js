@@ -1,6 +1,5 @@
 // server/index.js
 import pg from 'pg';
-//import { API_VERSION, PORT } from "./config/config.js";
 import { config } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -9,28 +8,20 @@ import bcrypt from 'bcrypt';
 config();
 
 const PORT = process.env.PORT || 3001;
-const API_PREFIX = 'api';
 const app = express();
 let usuarioActual = null;
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 })
-//
+
 app.use(bodyParser.json());
 
-/*app.use(`/${API_PREFIX}/${API_VERSION}/alive`, (req, res) => {
-  res.json({
-    ok: true, 
-    message: `API IS ALIVE AND UP RUNING IN PORT: ${PORT}`, 
-  });
-});
-*/
 async function autUsuario(idIngresado, contrasenaIngresada) {
-  const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
+  const result = await pool.query("SELECT * FROM usuario WHERE idusuario = $1 LIMIT 1", [idIngresado]);
   if (result.rows.length > 0) {
     const user = result.rows[0];
-
-    usuarioActual = user;
+    
+    usuarioActual = user;    
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
     return passwordMatch;
@@ -49,22 +40,22 @@ app.get("/ping", async (req, res) => {
 
 app.get("/test", async (req, res) => {
   const result = await pool.query("SELECT * FROM usuario");
-
+  
   // Extraer todas las contraseñas
   const contrasenas = result.rows.map(row => row.contrasenausuario);
-
+  
   return res.json(contrasenas);
 });
 
 async function validarTipo(res) {
-  if (usuarioActual.idtipousuario == 1) {
+  if(usuarioActual.idtipousuario == 1){
     return res.json({ message: "Masajista" });
-  } else if (usuarioActual.idtipousuario == 2) {
+  }else if(usuarioActual.idtipousuario == 2){
     return res.json({ message: "Administrador" });
-  } else if (usuarioActual.idtipousuario == 3) {
+  }else if(usuarioActual.idtipousuario == 3){
     return res.json({ message: "Director" });
-  } else {
-    return res.json({ message: "Ciclista" });
+  }else{
+    return res.json({ message: "Ciclista" });  
   }
 }
 
@@ -91,7 +82,7 @@ app.post("/login", async (req, res) => {
     }
 
     //Valida el tipo de usuario que loguea  
-    return validarTipo(res);
+    return validarTipo();
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
@@ -106,16 +97,10 @@ app.post("/registro", (req, res) => {
   res.json({ message: "Registro exitoso." });
 });
 
-app.get("/perfil/:iddocumento", (req, res) => {
-  if (!usuarioActual) {
-    return res.status(401).json({ message: "No has iniciado sesión." });
-  }
-  
-  // Asegurarse de que el iddocumento del usuarioActual coincide con el parámetro de la ruta
-  if (req.params.iddocumento !== usuarioActual.iddocumento) {
-    return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
-  }
+app.get("/perfil", (req, res) => {
+});
 
-  return res.json(usuarioActual);
+app.listen(PORT, () => {
+  console.log(`Server listening on ${PORT}`);
 });
 
