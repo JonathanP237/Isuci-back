@@ -15,7 +15,7 @@ let usuarioActual = null;
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 })
-
+//
 app.use(bodyParser.json());
 
 /*app.use(`/${API_PREFIX}/${API_VERSION}/alive`, (req, res) => {
