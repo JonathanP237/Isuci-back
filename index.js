@@ -9,7 +9,7 @@ config();
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-const idUsuarioActual = null;
+let idUsuarioActual = null;
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 })
@@ -24,6 +24,7 @@ async function authenticateUser(idIngresado, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE idusuario = $1 LIMIT 1", [idIngresado]);
   if (result.rows.length > 0) {
     const user = result.rows[0];
+    
     idUsuarioActual = user.idusuario;    
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
@@ -43,19 +44,28 @@ app.get("/ping", async (req, res) => {
   return res.json(result.rows[0]);
 });
 
-/*app.get("/test", async (req, res) => {
+app.get("/test", async (req, res) => {
   const result = await pool.query("SELECT * FROM usuario");
   
   // Extraer todas las contraseñas
   const contrasenas = result.rows.map(row => row.contrasenausuario);
   
   return res.json(contrasenas);
-});*/
+});
 
 app.post("/login", async (req, res) => {
   try {
     const { usuario, password, recaptchaToken } = req.body;
-    // Descomentar para habilitar la validación del captcha
+
+    // Validar que se hayan proporcionado los campos necesarios
+    if (!usuario || !password) {
+      return res.status(400).json({ message: "Falta el usuario o la contraseña." });
+    }
+
+    // Opcional: Descomentar para habilitar la validación del captcha
+    // if (!recaptchaToken) {
+    //   return res.status(400).json({ message: "Falta el token del captcha." });
+    // }
     // const captchaValid = await verifyRecaptcha(recaptchaToken);
     // if (!captchaValid) {
     //   return res.status(400).json({ message: "Fallo en la validación del captcha." });
@@ -71,6 +81,7 @@ app.post("/login", async (req, res) => {
     res.json({ message: "Login exitoso." });
   } catch (error) {
     console.error(error);
+    // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
     res.status(500).json({ message: "Error interno del servidor." });
   }
 });
