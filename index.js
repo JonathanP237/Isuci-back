@@ -48,13 +48,13 @@ app.get("/test", async (req, res) => {
 
 async function validarTipo() {
   if(usuarioActual.idtipousuario == 1){
-    return res.json({ message: "Masajista" });
+    return "Masajista";
   }else if(usuarioActual.idtipousuario == 2){
-    return res.json({ message: "Administrador" });
+    return "Administrador";
   }else if(usuarioActual.idtipousuario == 3){
-    return res.json({ message: "Director" });
+    return "Director";
   }else{
-    return res.json({ message: "Ciclista" });  
+    return "Ciclista";  
   }
 }
 
@@ -95,18 +95,22 @@ app.post("/registro", (req, res) => {
   }
   res.json({ message: "Registro exitoso." });
 });
-
+//VAlida tipo de usuario loggueado y construye los json con los datos del perfil requeridos
 async function ValidarDatosPerfil(res) {
   switch (validarTipo(res)){
+    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case "Masajista":
       res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.anosexperiencia);
     break;
+    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case "Director":
       res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.anosexperiencia);
     break;
+    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, idtipocontextura, idespecialidad, genero, peso, potencia, aceleracion, velocidadpromedio, velocidadmaxima, tiempociclista, años experiencia, gradorampa
     case "Ciclista":
       res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.idtipocontextura,usuarioActual.idespecialidad,usuarioActual.generousuario,usuarioActual.pesousuario,usuarioActual.potenciausuario,usuarioActual.acelaracionusuario,usuarioActual.velocidadpromediousuario,usuarioActual.velocidadmaximausuario,usuarioActual.tiempociclista,usuarioActual.anosexperiencia,usuarioActual.gradorampa);
     break;
+    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais
     case "Administrador":
       res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais);
     break;
