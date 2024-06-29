@@ -83,8 +83,8 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
     }
 
-    // Generar token o iniciar sesión aquí    
-    res.json({ message: validarTipo()});
+    //Valida el tipo de usuario que loguea  
+    validarTipo();
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
