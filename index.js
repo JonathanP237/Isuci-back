@@ -284,24 +284,28 @@ async function enviarCorreoConfirmacion(emailDestino) {
  * 
  */
 app.post("/registro", async (req, res) => {
-  const sql = ` 
-    INSERT INTO USUARIO (
-      IDUSUARIO, IDDOCUMENTO, IDTIPOUSUARIO, IDTIPOCONTEXTURA, IDPAIS, IDESPECIALIDAD, IDESCUADRA, 
-      TIPODOCUMENTOUSUARIO, NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, CORREOUSUARIO, 
-      CONTRASENAUSUARIO, PESOUSUARIO, POTENCIAUSUARIO, ACELARACIONUSUARIO, 
-      VELOCIDADPROMEDIOUSUARIO, VELOCIDADMAXIMAUSUARIO, TIEMPOCICLISTA, ANOSEXPERIENCIA, GRADORAMPA
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
-  `;
-
-  const valores = [
-    req.body.iddocumento, req.body.iddocumento, req.body.idtipousuario, req.body.idtipocontextura, req.body.idpais,
-    req.body.idespecialidad, req.body.idescuadra, req.body.tipodocumentousuario, req.body.nombreusuario,
-    req.body.apellidousuario, req.body.generousuario, req.body.correousuario, req.body.contrasenausuario,
-    req.body.pesousuario, req.body.potenciausuario, req.body.acelaracionusuario, req.body.velocidadpromediousuario,
-    req.body.velocidadmaximausuario, req.body.tiempociclista, req.body.anosexperiencia, req.body.gradorampa
-  ];
-
+  const { contrasenausuario } = req.body;
   try {
+    // Hashing de la contraseña
+    const hashedPassword = await bcrypt.hash(contrasenausuario, saltRounds);
+
+    const sql = ` 
+      INSERT INTO USUARIO (
+        IDUSUARIO, IDDOCUMENTO, IDTIPOUSUARIO, IDTIPOCONTEXTURA, IDPAIS, IDESPECIALIDAD, IDESCUADRA, 
+        TIPODOCUMENTOUSUARIO, NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, CORREOUSUARIO, 
+        CONTRASENAUSUARIO, PESOUSUARIO, POTENCIAUSUARIO, ACELARACIONUSUARIO, 
+        VELOCIDADPROMEDIOUSUARIO, VELOCIDADMAXIMAUSUARIO, TIEMPOCICLISTA, ANOSEXPERIENCIA, GRADORAMPA
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+    `;
+
+    const valores = [
+      req.body.iddocumento, req.body.iddocumento, req.body.idtipousuario, req.body.idtipocontextura, req.body.idpais,
+      req.body.idespecialidad, req.body.idescuadra, req.body.tipodocumentousuario, req.body.nombreusuario,
+      req.body.apellidousuario, req.body.generousuario, req.body.correousuario, hashedPassword, // Usar la contraseña hasheada
+      req.body.pesousuario, req.body.potenciausuario, req.body.acelaracionusuario, req.body.velocidadpromediousuario,
+      req.body.velocidadmaximausuario, req.body.tiempociclista, req.body.anosexperiencia, req.body.gradorampa
+    ];
+
     await pool.query(sql, valores);
     res.json({ message: "Registro exitoso." });
     await enviarCorreoConfirmacion(req.body.correousuario);
