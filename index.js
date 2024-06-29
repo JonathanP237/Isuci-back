@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-app.use(express.json()); // Esto es crucial
+app.use(express.json()); //// Esto es crucial
 app.use(bodyParser.json());
 
 
