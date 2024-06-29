@@ -100,19 +100,71 @@ async function ValidarDatosPerfil(res) {
   switch (await validarTipo()){
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case "Masajista":
-      res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.anosexperiencia);
+      res.json({
+        idtipousuario: usuarioActual.idtipousuario,
+        nombreusuario: usuarioActual.nombreusuario,
+        apellidousuario: usuarioActual.apellidousuario,
+        iddocumento: usuarioActual.iddocumento,
+        correousuario: usuarioActual.correousuario,
+        telefonousuario: usuarioActual.telefonousuario,
+        direccionusuario: usuarioActual.direccionusuario,
+        idpais: usuarioActual.idpais,
+        idescuadra: usuarioActual.idescuadra,
+        anosexperiencia: usuarioActual.anosexperiencia
+      });
     break;
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case "Director":
-      res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.anosexperiencia);
+      res.json({
+        idtipousuario: usuarioActual.idtipousuario,
+        nombreusuario: usuarioActual.nombreusuario,
+        apellidousuario: usuarioActual.apellidousuario,
+        iddocumento: usuarioActual.iddocumento,
+        correousuario: usuarioActual.correousuario,
+        telefonousuario: usuarioActual.telefonousuario,
+        direccionusuario: usuarioActual.direccionusuario,
+        idpais: usuarioActual.idpais,
+        idescuadra: usuarioActual.idescuadra,
+        anosexperiencia: usuarioActual.anosexperiencia
+      });
     break;
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, idtipocontextura, idespecialidad, genero, peso, potencia, aceleracion, velocidadpromedio, velocidadmaxima, tiempociclista, años experiencia, gradorampa
     case "Ciclista":
-      res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.idtipocontextura,usuarioActual.idespecialidad,usuarioActual.generousuario,usuarioActual.pesousuario,usuarioActual.potenciausuario,usuarioActual.acelaracionusuario,usuarioActual.velocidadpromediousuario,usuarioActual.velocidadmaximausuario,usuarioActual.tiempociclista,usuarioActual.anosexperiencia,usuarioActual.gradorampa);
+      res.json({
+        idtipousuario: usuarioActual.idtipousuario,
+        nombreusuario: usuarioActual.nombreusuario,
+        apellidousuario: usuarioActual.apellidousuario,
+        iddocumento: usuarioActual.iddocumento,
+        correousuario: usuarioActual.correousuario,
+        telefonousuario: usuarioActual.telefonousuario,
+        direccionusuario: usuarioActual.direccionusuario,
+        idpais: usuarioActual.idpais,
+        idescuadra: usuarioActual.idescuadra,
+        idtipocontextura: usuarioActual.idtipocontextura,
+        idespecialidad: usuarioActual.idespecialidad,
+        generousuario: usuarioActual.generousuario,
+        pesousuario: usuarioActual.pesousuario,
+        potenciausuario: usuarioActual.potenciausuario,
+        acelaracionusuario: usuarioActual.acelaracionusuario,
+        velocidadpromediousuario: usuarioActual.velocidadpromediousuario,
+        velocidadmaximausuario: usuarioActual.velocidadmaximausuario,
+        tiempociclista: usuarioActual.tiempociclista,
+        anosexperiencia: usuarioActual.anosexperiencia,
+        gradorampa: usuarioActual.gradorampa
+      });
     break;
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais
     case "Administrador":
-      res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais);
+      res.json({
+        idtipousuario: usuarioActual.idtipousuario,
+        nombreusuario: usuarioActual.nombreusuario,
+        apellidousuario: usuarioActual.apellidousuario,
+        iddocumento: usuarioActual.iddocumento,
+        correousuario: usuarioActual.correousuario,
+        telefonousuario: usuarioActual.telefonousuario,
+        direccionusuario: usuarioActual.direccionusuario,
+        idpais: usuarioActual.idpais
+      });
     break;
     default:
       res.json({ message: "Tipo usuario incorrecto." });
