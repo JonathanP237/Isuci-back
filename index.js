@@ -96,6 +96,26 @@ app.post("/registro", (req, res) => {
   res.json({ message: "Registro exitoso." });
 });
 
+async function ValidarDatosPerfil(res) {
+  switch (usuarioActual.idusuario){
+    case "Masajista":
+      res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.anosexperiencia);
+    break;
+    case "Director":
+      res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.anosexperiencia);
+    break;
+    case "Ciclista":
+      res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.idtipocontextura,usuarioActual.idespecialidad,usuarioActual.generousuario,usuarioActual.pesousuario,usuarioActual.potenciausuario,usuarioActual.acelaracionusuario,usuarioActual.velocidadpromediousuario,usuarioActual.velocidadmaximausuario,usuarioActual.tiempociclista,usuarioActual.anosexperiencia,usuarioActual.gradorampa);
+    break;
+    case "Administrador":
+      res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais);
+    break;
+    default:
+      res.json({ message: "Tipo usuario incorrecto." });
+    break;
+  }
+}
+
 app.get("/perfil/:iddocumento", (req, res) => {
   if (!usuarioActual) {
     return res.status(401).json({ message: "No has iniciado sesión." });
@@ -106,7 +126,7 @@ app.get("/perfil/:iddocumento", (req, res) => {
     return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
   }
 
-  return res.json(usuarioActual);
+  return ValidarDatosPerfil(res);
 });
 
 app.listen(PORT, () => {
