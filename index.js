@@ -43,13 +43,31 @@ app.get("/ping", async (req, res) => {
   return res.json(result.rows[0]);
 });
 
-app.get("/test", async (req, res) => {
+/*app.get("/test", async (req, res) => {
   const result = await pool.query("SELECT * FROM usuario");
   
   // Extraer todas las contraseñas
   const contrasenas = result.rows.map(row => row.contrasenausuario);
   
   return res.json(contrasenas);
+});*/
+
+app.get("/test", async (req, res) => {
+  try {
+    // Paso 1: Consulta las contraseñas
+    const users = await pool.query("SELECT idusuario, contrasenausuario FROM usuario WHERE idtipousuario = 4 AND generousuario = 'M'");
+    
+    // Paso 2 y 3: Hashea las contraseñas y actualiza la base de datos
+    for (const user of users.rows) {
+      const hashedPassword = await bcrypt.hash(user.contrasenausuario, saltRounds);
+      await pool.query("UPDATE usuario SET contrasenausuario = $1 WHERE idusuario = $2", [hashedPassword, user.idusuario]);
+    }
+    
+    return res.json({ message: "Contraseñas actualizadas correctamente" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error al actualizar las contraseñas" });
+  }
 });
 
 app.post("/login", async (req, res) => {
