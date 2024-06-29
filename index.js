@@ -124,7 +124,8 @@ app.post("/registro-pais", async (req, res, next) => {
   const sql = "INSERT INTO PAISES (IDPAIS, DESPAIS) VALUES ($1, $2)";
 
   try {
-    await pool.query(sql, [idPais, desPais]);
+    await pool.connect(); // Conectarse a la base de datos
+    await pool.query(sql, [idPais, desPais]); // Ejecutar la consulta SQL
     console.log("País registrado con éxito"); // Confirmación de éxito
     res.json({ message: "País registrado con éxito." });
   } catch (err) {
