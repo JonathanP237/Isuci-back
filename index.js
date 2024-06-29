@@ -102,7 +102,7 @@ app.post("/login", async (req, res) => {
 async function enviarCorreoConfirmacion(emailDestino) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to: usuarioActual.correousuario,
+    to: emailDestino,
     subject: 'Confirmación de Registro a ISUCI',
     text: '¡Tu registro ha sido exitoso! Bienvenido a nuestra plataforma desde ahora puedes hacer uso de todas nuestras funcionalidades.',
     // Puedes usar `html` en lugar de `text` para contenido HTML
@@ -141,24 +141,6 @@ app.post("/registro", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error al realizar el registro. Intente de nuevo." });
-  }
-});
-
-app.post("/registro-pais", async (req, res, next) => {
-  console.log("Inicio del registro de país"); // Registro de seguimiento
-  const { idPais, desPais } = req.body;
-  console.log(`Datos recibidos: idPais = ${idPais}, desPais = ${desPais}`); // Mostrar los datos recibidos
-
-  const sql = "INSERT INTO PAISES (IDPAIS, DESPAIS) VALUES ($1, $2)";
-
-  try {
-    await pool.connect(); // Conectarse a la base de datos
-    await pool.query(sql, [idPais, desPais]); // Ejecutar la consulta SQL
-    console.log("País registrado con éxito"); // Confirmación de éxito
-    res.json({ message: "País registrado con éxito." });
-  } catch (err) {
-    console.error("Error al registrar el país:", err); // Registro del error
-    next(err); // Pasar el error al middleware de manejo de errores
   }
 });
 
