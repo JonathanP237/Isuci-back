@@ -1,3 +1,10 @@
+/**
+ * This file contains the server-side code for the application.
+ * It includes the necessary imports, configurations, and route handlers.
+ * The server listens on the specified port and interacts with a PostgreSQL database.
+ * The code also includes functions for user authentication, registration, and profile retrieval.
+ * @module server/index
+ */
 // server/index.js
 import pg from 'pg';
 import { config } from 'dotenv';
@@ -5,6 +12,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 config();
 
@@ -21,11 +30,30 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS, // Contraseña del correo electrónico del remitente
   },
 });
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API de Mi Proyecto',
+      version: '1.0.0',
+      description: 'Esta es la documentación de la API de mi proyecto.',
+    },
+  },
+  apis: ['./index.js'], // Ruta a los archivos donde Swagger leerá los comentarios para generar la documentación
+};
+const swaggerSpec = swaggerJSDoc(options);
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json()); //// Esto es crucial
 app.use(bodyParser.json());
 
 
+/**
+ * Authenticates a user by checking if the provided ID and password match the stored values.
+ * @param {string} idIngresado - The ID of the user to authenticate.
+ * @param {string} contrasenaIngresada - The password of the user to authenticate.
+ * @returns {Promise<boolean>} - A promise that resolves to true if the authentication is successful, false otherwise.
+ */
 async function autUsuario(idIngresado, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
   if (result.rows.length > 0) {
@@ -49,13 +77,14 @@ app.get("/ping", async (req, res) => {
 
 app.get("/test", async (req, res) => {
   const result = await pool.query("SELECT * FROM usuario");
-
-  // Extraer todas las contraseñas
   const contrasenas = result.rows.map(row => row.contrasenausuario);
-
   return res.json(contrasenas);
 });
 
+/**
+ * Validates the type of the current user.
+ * @returns {string} The type of the user.
+ */
 async function validarTipo() {
   if (usuarioActual.idtipousuario == 1) {
     return "Masajista";
@@ -67,7 +96,41 @@ async function validarTipo() {
     return "Ciclista";
   }
 }
-
+/**
+ * @swagger
+ * /login:
+ *  post:
+ *    summary: Inicia sesión en la aplicación.
+ *    description: Este endpoint permite iniciar sesión en la aplicación con un usuario y contraseña.
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              usuario:
+ *                type: string
+ *                description: El ID del usuario.
+ *                example: 123456789
+ *              password:
+ *                type: string
+ *                description: La contraseña del usuario.
+ *                example: password123
+ *              recaptchaToken:
+ *                type: string
+ *                description: El token del captcha.
+ *    responses:
+ *      200:
+ *        description: Inicio de sesión exitoso.
+ *      401:
+ *        description: Usuario o contraseña incorrectos.
+ *      400:
+ *        description: Faltan el usuario o la contraseña.
+ *      500:
+ *        description: Error interno del servidor.
+ *  
+ */
 app.post("/login", async (req, res) => {
   try {
     const { usuario, password, recaptchaToken } = req.body;
@@ -99,13 +162,17 @@ app.post("/login", async (req, res) => {
   }
 });
 
+/**
+ * Sends a confirmation email to the specified email address.
+ * @param {string} emailDestino - The destination email address.
+ * @returns {Promise<void>} - A promise that resolves when the email is sent successfully, or rejects with an error if there was a problem sending the email.
+ */
 async function enviarCorreoConfirmacion(emailDestino) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: emailDestino,
     subject: 'Confirmación de Registro a ISUCI',
     text: '¡Tu registro ha sido exitoso! Bienvenido a nuestra plataforma desde ahora puedes hacer uso de todas nuestras funcionalidades.',
-    // Puedes usar `html` en lugar de `text` para contenido HTML
   };
 
   try {
@@ -115,7 +182,107 @@ async function enviarCorreoConfirmacion(emailDestino) {
     console.error('Error al enviar el correo de confirmación:', error);
   }
 }
-
+/**
+ * @swagger
+ * /registro:
+ *    post:
+ *      summary: Registra un nuevo usuario en la aplicación.
+ *      description: Este endpoint permite registrar un nuevo usuario en la aplicación.
+ *      requestBody:
+ *       required: true
+ *       content:
+ *        application/json:
+ *         schema:
+ *          type: object
+ *          properties:
+ *           iddocumento:
+ *            type: string
+ *            description: El ID del usuario.
+ *            example: 123456789
+ *           idtipousuario:
+ *            type: number
+ *            description: El tipo de usuario.
+ *            example: 1
+ *           idtipocontextura:
+ *            type: number
+ *            description: El tipo de contextura del usuario.
+ *            example: 1
+ *           idpais:
+ *            type: number
+ *            description: El país del usuario.
+ *            example: 1
+ *           idespecialidad:
+ *            type: number
+ *            description: La especialidad del usuario.
+ *            example: 1
+ *           idescuadra:
+ *            type: number
+ *            description: La escuadra del usuario.
+ *            example: 1
+ *           tipodocumentousuario:
+ *            type: string
+ *            description: El tipo de documento del usuario.
+ *            example: "CC"
+ *           nombreusuario:
+ *            type: string
+ *            description: El nombre del usuario.
+ *            example: "Juan"
+ *           apellidousuario:
+ *            type: string
+ *            description: El apellido del usuario.
+ *            example: "Pérez"
+ *           generousuario:
+ *            type: string
+ *            description: El género del usuario.
+ *            example: "M"
+ *           correousuario:
+ *            type: string
+ *            description: El correo del usuario.
+ *            example: "asd@correo.com"
+ *           contrasenausuario:
+ *            type: string
+ *            description: La contraseña del usuario.
+ *            example: "password123"
+ *           pesousuario:
+ *            type: number
+ *            description: El peso del usuario.
+ *            example: 70
+ *           potenciausuario:
+ *            type: number
+ *            description: La potencia del usuario.
+ *            example: 200
+ *           acelaracionusuario:
+ *            type: number
+ *            description: La aceleración del usuario.
+ *            example: 10
+ *           velocidadpromediousuario:
+ *            type: number
+ *            description: La velocidad promedio del usuario.
+ *            example: 20
+ *           velocidadmaximausuario:
+ *            type: number
+ *            description: La velocidad máxima del usuario.
+ *            example: 30
+ *           tiempociclista:
+ *            type: number
+ *            description: El tiempo del ciclista.
+ *            example: 10
+ *           anosexperiencia:
+ *            type: number
+ *            description: Los años de experiencia del usuario.
+ *            example: 5
+ *           gradorampa:
+ *            type: number 
+ *            description: El grado de la rampa.
+ *            example: 5
+ *      responses:
+ *       200:
+ *         description: Registro exitoso.
+ *       500:
+ *         description: Error al realizar el registro. Intente de nuevo.
+ * 
+ * 
+ */
 app.post("/registro", async (req, res) => {
   const sql = ` 
     INSERT INTO USUARIO (
@@ -127,10 +294,10 @@ app.post("/registro", async (req, res) => {
   `;
 
   const valores = [
-    req.body.iddocumento, req.body.iddocumento, req.body.idtipousuario, req.body.idtipocontextura, req.body.idpais, 
-    req.body.idespecialidad, req.body.idescuadra, req.body.tipodocumentousuario, req.body.nombreusuario, 
-    req.body.apellidousuario, req.body.generousuario, req.body.correousuario, req.body.contrasenausuario, 
-    req.body.pesousuario, req.body.potenciausuario, req.body.acelaracionusuario, req.body.velocidadpromediousuario, 
+    req.body.iddocumento, req.body.iddocumento, req.body.idtipousuario, req.body.idtipocontextura, req.body.idpais,
+    req.body.idespecialidad, req.body.idescuadra, req.body.tipodocumentousuario, req.body.nombreusuario,
+    req.body.apellidousuario, req.body.generousuario, req.body.correousuario, req.body.contrasenausuario,
+    req.body.pesousuario, req.body.potenciausuario, req.body.acelaracionusuario, req.body.velocidadpromediousuario,
     req.body.velocidadmaximausuario, req.body.tiempociclista, req.body.anosexperiencia, req.body.gradorampa
   ];
 
@@ -144,12 +311,12 @@ app.post("/registro", async (req, res) => {
   }
 });
 
-// Middleware de manejo de errores
-app.use((err, req, res, next) => {
-  console.error("Manejador de errores:", err); // Registro del error
-  res.status(500).json({ message: "Ocurrió un error en el servidor. Intente de nuevo más tarde." });
-});
-//VAlida tipo de usuario loggueado y construye los json con los datos del perfil requeridos
+
+/**
+ * Validates user profile data based on the user's type and returns the corresponding data.
+ * @param {object} res - The response object used to send the JSON response.
+ * @returns {void}
+ */
 async function ValidarDatosPerfil(res) {
   switch (await validarTipo()) {
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
@@ -225,7 +392,31 @@ async function ValidarDatosPerfil(res) {
       break;
   }
 }
-
+/**
+ * @swagger
+ * /perfil/{iddocumento}:
+ *  get:
+ *   summary: Obtiene el perfil de un usuario.
+ *   description: Este endpoint permite obtener el perfil de un usuario en la aplicación.
+ *   requestBody:
+ *    required: true
+ *    content:
+ *      application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *           iddocumento:
+ *           type: string
+ *           description: El ID del usuario.
+ *           example: 123456789
+ *   responses:
+ *    200:
+ *      description: Perfil obtenido exitosamente.
+ *    401:
+ *     description: No has iniciado sesión.
+ *    403:
+ *     description: No tienes permiso para ver este perfil.
+ */
 app.get("/perfil/:iddocumento", (req, res) => {
   if (!usuarioActual) {
     return res.status(401).json({ message: "No has iniciado sesión." });
