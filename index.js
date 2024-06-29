@@ -59,9 +59,10 @@ app.get("/test", async (req, res) => {
       await client.query('BEGIN');
       const users = await client.query("SELECT * FROM usuario");
       
+      const saltRounds = 10; // Define saltRounds aquí
+
       for (const user of users.rows) {
         const hashedPassword = await bcrypt.hash(user.contrasenausuario, saltRounds);
-        // Intenta actualizar la contraseña y registra la operación
         try {
           await client.query("UPDATE usuario SET contrasenausuario = $1 WHERE idusuario = $2", [hashedPassword, user.idusuario]);
         } catch (updateError) {
