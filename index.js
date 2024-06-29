@@ -4,17 +4,26 @@ import { config } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
+import nodemailer from 'nodemailer';
 
+app.use(express.json()); // Esto es crucial
+app.use(bodyParser.json());
 config();
 
+let usuarioActual = null;
 const PORT = process.env.PORT || 3001;
 const app = express();
-let usuarioActual = null;
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 })
-app.use(express.json()); // Esto es crucial
-app.use(bodyParser.json());
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Usa el servicio de correo electrónico que prefieras
+  auth: {
+    user: process.env.EMAIL_USER, // Correo electrónico del remitente
+    pass: process.env.EMAIL_PASS, // Contraseña del correo electrónico del remitente
+  },
+});
+
 
 async function autUsuario(idIngresado, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
@@ -89,6 +98,23 @@ app.post("/login", async (req, res) => {
   }
 });
 
+async function enviarCorreoConfirmacion(emailDestino) {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: emailDestino,
+    subject: 'Confirmación de Registro a ISUCI',
+    text: '¡Tu registro ha sido exitoso! Bienvenido a nuestra plataforma desde ahora puedes hacer uso de todas nuestras funcionalidades.',
+    // Puedes usar `html` en lugar de `text` para contenido HTML
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Correo de confirmación enviado');
+  } catch (error) {
+    console.error('Error al enviar el correo de confirmación:', error);
+  }
+}
+
 app.post("/registro", async (req, res) => {
   const sql = ` 
     INSERT INTO USUARIO (
@@ -110,6 +136,7 @@ app.post("/registro", async (req, res) => {
   try {
     await pool.query(sql, valores);
     res.json({ message: "Registro exitoso." });
+    await enviarCorreoConfirmacion(req.body.correousuario);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error al realizar el registro. Intente de nuevo." });
