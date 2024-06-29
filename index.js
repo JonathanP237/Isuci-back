@@ -115,6 +115,25 @@ app.post("/registro", async (req, res) => {
     res.status(500).json({ message: "Error al realizar el registro. Intente de nuevo." });
   }
 });
+
+app.post("/registro-pais", async (req, res) => {
+  // Extraer los datos del cuerpo de la solicitud
+  const { idPais, desPais } = req.body;
+
+  // Consulta SQL para insertar el nuevo país
+  const sql = "INSERT INTO PAISES (IDPAIS, DESPAIS) VALUES ($1, $2)";
+
+  try {
+    // Ejecutar la consulta SQL con los valores proporcionados
+    await pool.query(sql, [idPais, desPais]);
+    // Enviar una respuesta de éxito
+    res.json({ message: "País registrado con éxito." });
+  } catch (err) {
+    // En caso de error, imprimir el error en la consola y enviar una respuesta de error
+    console.error(err);
+    res.status(500).json({ message: "Error al registrar el país. Intente de nuevo." });
+  }
+});
 //VAlida tipo de usuario loggueado y construye los json con los datos del perfil requeridos
 async function ValidarDatosPerfil(res) {
   switch (await validarTipo()) {
