@@ -20,6 +20,7 @@ config();
 let usuarioActual = null;
 const PORT = process.env.PORT || 3001;
 const app = express();
+
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 })
@@ -42,6 +43,7 @@ const options = {
   apis: ['./index.js'], // Ruta a los archivos donde Swagger leerá los comentarios para generar la documentación
 };
 const swaggerSpec = swaggerJSDoc(options);
+const saltRounds = 10;
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json()); //// Esto es crucial
