@@ -17,7 +17,7 @@ const pool = new pg.Pool({
 app.use(bodyParser.json());
 
 async function autUsuario(idIngresado, contrasenaIngresada) {
-  const result = await pool.query("SELECT * FROM usuario WHERE idusuario = $1 LIMIT 1", [idIngresado]);
+  const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
   if (result.rows.length > 0) {
     const user = result.rows[0];    
     usuarioActual = user;    
