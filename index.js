@@ -97,7 +97,7 @@ app.post("/registro", (req, res) => {
 });
 
 async function ValidarDatosPerfil(res) {
-  switch (usuarioActual.idtipousuario){
+  switch (validarTipo(res)){
     case "Masajista":
       res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.anosexperiencia);
     break;
