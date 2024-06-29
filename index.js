@@ -19,8 +19,7 @@ app.use(bodyParser.json());
 async function autUsuario(idIngresado, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE idusuario = $1 LIMIT 1", [idIngresado]);
   if (result.rows.length > 0) {
-    const user = result.rows[0];
-    
+    const user = result.rows[0];    
     usuarioActual = user;    
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
@@ -82,7 +81,7 @@ app.post("/login", async (req, res) => {
     }
 
     //Valida el tipo de usuario que loguea  
-    return validarTipo();
+    return validarTipo(res);
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
@@ -97,7 +96,17 @@ app.post("/registro", (req, res) => {
   res.json({ message: "Registro exitoso." });
 });
 
-app.get("/perfil", (req, res) => {
+app.get("/perfil/:iddocumento", (req, res) => {
+  if (!usuarioActual) {
+    return res.status(401).json({ message: "No has iniciado sesión." });
+  }
+  
+  // Asegurarse de que el iddocumento del usuarioActual coincide con el parámetro de la ruta
+  if (req.params.iddocumento !== usuarioActual.iddocumento) {
+    return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
+  }
+
+  return res.json(usuarioActual);
 });
 
 app.listen(PORT, () => {
