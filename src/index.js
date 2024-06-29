@@ -1,6 +1,6 @@
 // server/index.js
 import pg from 'pg';
-import { API_VERSION, PORT } from "./config/config.js";
+//import { API_VERSION, PORT } from "./config/config.js";
 import { config } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
