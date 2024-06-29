@@ -29,20 +29,6 @@ async function autUsuario(idIngresado, contrasenaIngresada) {
   return false;
 }
 
-async function validarTipo() {
-  if(usuarioActual.idtipousuario == 1){
-    return res.json({ message: "Masajista" });
-  }else if(usuarioActual.idtipousuario == 2){
-    return res.json({ message: "Administrador" });
-  }else if(usuarioActual.idtipousuario == 3){
-    return res.json({ message: "Director" });
-  }else{
-    return res.json({ message: "Ciclista" });  
-  }
-}
-
-
-
 app.get("/api", (req, res) => {
   res.json({ message: "Hello from server!" });
 });
@@ -60,6 +46,18 @@ app.get("/test", async (req, res) => {
   
   return res.json(contrasenas);
 });
+
+async function validarTipo(res) {
+  if(usuarioActual.idtipousuario == 1){
+    return res.json({ message: "Masajista" });
+  }else if(usuarioActual.idtipousuario == 2){
+    return res.json({ message: "Administrador" });
+  }else if(usuarioActual.idtipousuario == 3){
+    return res.json({ message: "Director" });
+  }else{
+    return res.json({ message: "Ciclista" });  
+  }
+}
 
 app.post("/login", async (req, res) => {
   try {
