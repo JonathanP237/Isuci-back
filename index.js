@@ -13,7 +13,7 @@ let usuarioActual = null;
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 })
-
+app.use(express.json()); // Esto es crucial
 app.use(bodyParser.json());
 
 async function autUsuario(idIngresado, contrasenaIngresada) {
