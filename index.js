@@ -17,11 +17,11 @@ const pool = new pg.Pool({
 app.use(bodyParser.json());
 
 async function autUsuario(idIngresado, contrasenaIngresada) {
-  const result = await pool.query("SELECT * FROM usuario WHERE idusuario = $1 LIMIT 1", [idIngresado]);
+  const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
   if (result.rows.length > 0) {
     const user = result.rows[0];
-    
-    usuarioActual = user;    
+
+    usuarioActual = user;
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
     return passwordMatch;
@@ -40,22 +40,22 @@ app.get("/ping", async (req, res) => {
 
 app.get("/test", async (req, res) => {
   const result = await pool.query("SELECT * FROM usuario");
-  
+
   // Extraer todas las contraseñas
   const contrasenas = result.rows.map(row => row.contrasenausuario);
-  
+
   return res.json(contrasenas);
 });
 
 async function validarTipo(res) {
-  if(usuarioActual.idtipousuario == 1){
+  if (usuarioActual.idtipousuario == 1) {
     return res.json({ message: "Masajista" });
-  }else if(usuarioActual.idtipousuario == 2){
+  } else if (usuarioActual.idtipousuario == 2) {
     return res.json({ message: "Administrador" });
-  }else if(usuarioActual.idtipousuario == 3){
+  } else if (usuarioActual.idtipousuario == 3) {
     return res.json({ message: "Director" });
-  }else{
-    return res.json({ message: "Ciclista" });  
+  } else {
+    return res.json({ message: "Ciclista" });
   }
 }
 
@@ -82,7 +82,7 @@ app.post("/login", async (req, res) => {
     }
 
     //Valida el tipo de usuario que loguea  
-    return validarTipo();
+    return validarTipo(res);
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
