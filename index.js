@@ -81,7 +81,7 @@ app.post("/login", async (req, res) => {
     }
 
     //Valida el tipo de usuario que loguea  
-    return res.json({message: await validarTipo()});
+    return res.json(await validarTipo());
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
@@ -97,7 +97,7 @@ app.post("/registro", (req, res) => {
 });
 //VAlida tipo de usuario loggueado y construye los json con los datos del perfil requeridos
 async function ValidarDatosPerfil(res) {
-  switch (validarTipo(res)){
+  switch (await validarTipo()){
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case "Masajista":
       res.json(usuarioActual.idtipousuario,usuarioActual.nombreusuario,usuarioActual.apellidousuario,usuarioActual.iddocumento,usuarioActual.correousuario,usuarioActual.telefonousuario,usuarioActual.direccionusuario,usuarioActual.idpais,usuarioActual.idescuadra,usuarioActual.anosexperiencia);
