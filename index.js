@@ -90,8 +90,8 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/registro", async (req, res) => {
-  const sql = "INSERT INTO usuario (IDUSUARIO, IDDOCUMENTO, IDTIPOUSUARIO, IDTIPOCONTEXTURA, IDPAIS, IDESPECIALIDAD, IDESCUADRA, TIPODOCUMENTOUSUARIO, NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, CORREOUSUARIO, CONTRASENAUSUARIO, PESOUSUARIO, POTENCIAUSUARIO, ACELARACIONUSUARIO, VELOCIDADPROMEDIOUSUARIO, VELOCIDADMAXIMAUSUARIO, TIEMPOCICLISTA, ANOSEXPERIENCIA, GRADORAMPA) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-  pool.query(sql, [req.body.idusuario, req.body.iddocumento, req.body.idtipousuario, req.body.idtipocontextura, req.body.idpais, req.body.idespecialidad, req.body.idescuadra, req.body.tipodocumentousuario, req.body.nombreusuario, req.body.apellidousuario, req.body.generousuario, req.body.correousuario, req.body.contrasenausuario, req.body.pesousuario, req.body.potenciausuario, req.body.acelaracionusuario, req.body.velocidadpromediousuario, req.body.velocidadmaximausuario, req.body.tiempociclista, req.body.anosexperiencia, req.body.gradorampa], (err, result) => {
+  const sql = "INSERT INTO usuario (IDDOCUMENTO, IDTIPOUSUARIO, IDTIPOCONTEXTURA, IDPAIS, IDESPECIALIDAD, IDESCUADRA, TIPODOCUMENTOUSUARIO, NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, CORREOUSUARIO, CONTRASENAUSUARIO, PESOUSUARIO, POTENCIAUSUARIO, ACELARACIONUSUARIO, VELOCIDADPROMEDIOUSUARIO, VELOCIDADMAXIMAUSUARIO, TIEMPOCICLISTA, ANOSEXPERIENCIA, GRADORAMPA) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+  pool.query(sql, [req.body.iddocumento, req.body.idtipousuario, req.body.idtipocontextura, req.body.idpais, req.body.idespecialidad, req.body.idescuadra, req.body.tipodocumentousuario, req.body.nombreusuario, req.body.apellidousuario, req.body.generousuario, req.body.correousuario, req.body.contrasenausuario, req.body.pesousuario, req.body.potenciausuario, req.body.acelaracionusuario, req.body.velocidadpromediousuario, req.body.velocidadmaximausuario, req.body.tiempociclista, req.body.anosexperiencia, req.body.gradorampa], (err, result) => {
     if (err) {
       return res.json({ message: "Error al realizar el registro. Intente de nuevo." });
     }
