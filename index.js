@@ -9,23 +9,19 @@ config();
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-let idUsuarioActual = null;
+let UsuarioActual = null;
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 })
 
 app.use(bodyParser.json());
 
-async function hashPassword(password) {
-  return await bcrypt.hash(password, saltRounds);
-}
-
-async function authenticateUser(idIngresado, contrasenaIngresada) {
+async function autUsuario(idIngresado, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE idusuario = $1 LIMIT 1", [idIngresado]);
   if (result.rows.length > 0) {
     const user = result.rows[0];
     
-    idUsuarioActual = user.idusuario;    
+    UsuarioActual = user;    
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
     return passwordMatch;
@@ -61,7 +57,6 @@ app.post("/login", async (req, res) => {
     if (!usuario || !password) {
       return res.status(400).json({ message: "Falta el usuario o la contraseña." });
     }
-
     // Opcional: Descomentar para habilitar la validación del captcha
     // if (!recaptchaToken) {
     //   return res.status(400).json({ message: "Falta el token del captcha." });
@@ -71,13 +66,12 @@ app.post("/login", async (req, res) => {
     //   return res.status(400).json({ message: "Fallo en la validación del captcha." });
     // }
 
-    const userAuthenticated = await authenticateUser(usuario, password);
+    const userAuthenticated = await autUsuario(usuario, password);
     if (!userAuthenticated) {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
     }
 
-    // Generar token o iniciar sesión aquí
-
+    // Generar token o iniciar sesión aquí    
     res.json({ message: "Login exitoso." });
   } catch (error) {
     console.error(error);
