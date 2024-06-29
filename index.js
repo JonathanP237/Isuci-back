@@ -91,7 +91,7 @@ app.post("/login", async (req, res) => {
 
 app.post("/registro", async (req, res) => {
   const sql = ` 
-    INSERT INTO usuario (
+    INSERT INTO USUARIO (
       IDUSUARIO, IDDOCUMENTO, IDTIPOUSUARIO, IDTIPOCONTEXTURA, IDPAIS, IDESPECIALIDAD, IDESCUADRA, 
       TIPODOCUMENTOUSUARIO, NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, CORREOUSUARIO, 
       CONTRASENAUSUARIO, PESOUSUARIO, POTENCIAUSUARIO, ACELARACIONUSUARIO, 
@@ -116,23 +116,27 @@ app.post("/registro", async (req, res) => {
   }
 });
 
-app.post("/registro-pais", async (req, res) => {
-  // Extraer los datos del cuerpo de la solicitud
+app.post("/registro-pais", async (req, res, next) => {
+  console.log("Inicio del registro de país"); // Registro de seguimiento
   const { idPais, desPais } = req.body;
+  console.log(`Datos recibidos: idPais = ${idPais}, desPais = ${desPais}`); // Mostrar los datos recibidos
 
-  // Consulta SQL para insertar el nuevo país
   const sql = "INSERT INTO PAISES (IDPAIS, DESPAIS) VALUES ($1, $2)";
 
   try {
-    // Ejecutar la consulta SQL con los valores proporcionados
     await pool.query(sql, [idPais, desPais]);
-    // Enviar una respuesta de éxito
+    console.log("País registrado con éxito"); // Confirmación de éxito
     res.json({ message: "País registrado con éxito." });
   } catch (err) {
-    // En caso de error, imprimir el error en la consola y enviar una respuesta de error
-    console.error(err);
-    res.status(500).json({ message: "Error al registrar el país. Intente de nuevo." });
+    console.error("Error al registrar el país:", err); // Registro del error
+    next(err); // Pasar el error al middleware de manejo de errores
   }
+});
+
+// Middleware de manejo de errores
+app.use((err, req, res, next) => {
+  console.error("Manejador de errores:", err); // Registro del error
+  res.status(500).json({ message: "Ocurrió un error en el servidor. Intente de nuevo más tarde." });
 });
 //VAlida tipo de usuario loggueado y construye los json con los datos del perfil requeridos
 async function ValidarDatosPerfil(res) {
