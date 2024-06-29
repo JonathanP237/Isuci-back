@@ -9,7 +9,7 @@ config();
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-let UsuarioActual = null;
+let usuarioActual = null;
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
 })
@@ -21,12 +21,24 @@ async function autUsuario(idIngresado, contrasenaIngresada) {
   if (result.rows.length > 0) {
     const user = result.rows[0];
     
-    UsuarioActual = user;    
+    usuarioActual = user;    
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
     return passwordMatch;
   }
   return false;
+}
+
+async function validarTipo() {
+  if(usuarioActual.idtipousuario == 1){
+    return res.json({ message: "Masajista" });
+  }else if(usuarioActual.idtipousuario == 2){
+    return res.json({ message: "Administrador" });
+  }else if(usuarioActual.idtipousuario == 3){
+    return res.json({ message: "Director" });
+  }else{
+    return res.json({ message: "Ciclista" });  
+  }
 }
 
 
@@ -72,7 +84,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Generar token o iniciar sesión aquí    
-    res.json({ message: "Login exitoso." });
+    res.json({ message: validarTipo()});
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
