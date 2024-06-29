@@ -19,8 +19,8 @@ app.use(bodyParser.json());
 async function autUsuario(idIngresado, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
   if (result.rows.length > 0) {
-    const user = result.rows[0];    
-    usuarioActual = user;    
+    const user = result.rows[0];
+    usuarioActual = user;
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
     return passwordMatch;
@@ -39,22 +39,22 @@ app.get("/ping", async (req, res) => {
 
 app.get("/test", async (req, res) => {
   const result = await pool.query("SELECT * FROM usuario");
-  
+
   // Extraer todas las contraseñas
   const contrasenas = result.rows.map(row => row.contrasenausuario);
-  
+
   return res.json(contrasenas);
 });
 
 async function validarTipo() {
-  if(usuarioActual.idtipousuario == 1){
+  if (usuarioActual.idtipousuario == 1) {
     return "Masajista";
-  }else if(usuarioActual.idtipousuario == 2){
+  } else if (usuarioActual.idtipousuario == 2) {
     return "Administrador";
-  }else if(usuarioActual.idtipousuario == 3){
+  } else if (usuarioActual.idtipousuario == 3) {
     return "Director";
-  }else{
-    return "Ciclista";  
+  } else {
+    return "Ciclista";
   }
 }
 
@@ -89,15 +89,18 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/registro", (req, res) => {
-  if (err) {
-    return res.json({ message: "Error al realizar el registro. Intente de nuevo." });
-  }
-  res.json({ message: "Registro exitoso." });
+app.post("/registro", async (req, res) => {
+  const sql = "INSERT INTO usuario (IDUSUARIO, IDDOCUMENTO, IDTIPOUSUARIO, IDTIPOCONTEXTURA, IDPAIS, IDESPECIALIDAD, IDESCUADRA, TIPODOCUMENTOUSUARIO, NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, CORREOUSUARIO, CONTRASENAUSUARIO, PESOUSUARIO, POTENCIAUSUARIO, ACELARACIONUSUARIO, VELOCIDADPROMEDIOUSUARIO, VELOCIDADMAXIMAUSUARIO, TIEMPOCICLISTA, ANOSEXPERIENCIA, GRADORAMPA) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+  pool.query(sql, [req.body.idusuario, req.body.iddocumento, req.body.idtipousuario, req.body.idtipocontextura, req.body.idpais, req.body.idespecialidad, req.body.idescuadra, req.body.tipodocumentousuario, req.body.nombreusuario, req.body.apellidousuario, req.body.generousuario, req.body.correousuario, req.body.contrasenausuario, req.body.pesousuario, req.body.potenciausuario, req.body.acelaracionusuario, req.body.velocidadpromediousuario, req.body.velocidadmaximausuario, req.body.tiempociclista, req.body.anosexperiencia, req.body.gradorampa], (err, result) => {
+    if (err) {
+      return res.json({ message: "Error al realizar el registro. Intente de nuevo." });
+    }
+  });
+  return res.json({ message: "Registro exitoso." });
 });
 //VAlida tipo de usuario loggueado y construye los json con los datos del perfil requeridos
 async function ValidarDatosPerfil(res) {
-  switch (await validarTipo()){
+  switch (await validarTipo()) {
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case "Masajista":
       res.json({
@@ -112,7 +115,7 @@ async function ValidarDatosPerfil(res) {
         idescuadra: usuarioActual.idescuadra,
         anosexperiencia: usuarioActual.anosexperiencia
       });
-    break;
+      break;
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case "Director":
       res.json({
@@ -127,7 +130,7 @@ async function ValidarDatosPerfil(res) {
         idescuadra: usuarioActual.idescuadra,
         anosexperiencia: usuarioActual.anosexperiencia
       });
-    break;
+      break;
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, idtipocontextura, idespecialidad, genero, peso, potencia, aceleracion, velocidadpromedio, velocidadmaxima, tiempociclista, años experiencia, gradorampa
     case "Ciclista":
       res.json({
@@ -152,7 +155,7 @@ async function ValidarDatosPerfil(res) {
         anosexperiencia: usuarioActual.anosexperiencia,
         gradorampa: usuarioActual.gradorampa
       });
-    break;
+      break;
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais
     case "Administrador":
       res.json({
@@ -165,10 +168,10 @@ async function ValidarDatosPerfil(res) {
         direccionusuario: usuarioActual.direccionusuario,
         idpais: usuarioActual.idpais
       });
-    break;
+      break;
     default:
       res.json({ message: "Tipo usuario incorrecto." });
-    break;
+      break;
   }
 }
 
@@ -176,7 +179,7 @@ app.get("/perfil/:iddocumento", (req, res) => {
   if (!usuarioActual) {
     return res.status(401).json({ message: "No has iniciado sesión." });
   }
-  
+
   // Asegurarse de que el iddocumento del usuarioActual coincide con el parámetro de la ruta
   if (req.params.iddocumento !== usuarioActual.iddocumento) {
     return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
