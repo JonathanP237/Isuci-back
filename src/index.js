@@ -8,7 +8,6 @@ import bcrypt from 'bcrypt';
 
 config();
 
-const PORT = process.env.PORT || 3001;
 const API_PREFIX = 'api';
 const app = express();
 let usuarioActual = null;
