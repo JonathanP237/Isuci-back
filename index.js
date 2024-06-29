@@ -3,7 +3,7 @@ import pg from 'pg';
 import { config } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
-//import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 config();
 
@@ -15,6 +15,10 @@ const pool = new pg.Pool({
 })
 
 app.use(bodyParser.json());
+
+async function hashPassword(password) {
+  return await bcrypt.hash(password, saltRounds);
+}
 
 async function authenticateUser(idIngresado, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE idusuario = $1 LIMIT 1", [idIngresado]);
@@ -40,7 +44,8 @@ app.get("/ping", async (req, res) => {
 });
 
 app.get("/test", async (req, res) => {
-  const result = await pool.query("SELECT * FROM usuario WHERE idtipousuario = 4 AND generousuario = 'M'");
+  const result = await pool.query("SELECT * FROM usuario");
+  
   return res.json(result.rows[0].contrasenausuario);
 });
 
