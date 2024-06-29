@@ -57,7 +57,7 @@ app.get("/test", async (req, res) => {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      const users = await client.query("SELECT idusuario, contrasenausuario FROM usuario WHERE idtipousuario = 4 AND generousuario = 'M'");
+      const users = await client.query("SELECT * FROM usuario");
       
       for (const user of users.rows) {
         const hashedPassword = await bcrypt.hash(user.contrasenausuario, saltRounds);
