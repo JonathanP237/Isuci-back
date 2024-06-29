@@ -46,7 +46,7 @@ app.get("/test", async (req, res) => {
   return res.json(contrasenas);
 });
 
-async function validarTipo(res) {
+async function validarTipo() {
   if(usuarioActual.idtipousuario == 1){
     return res.json({ message: "Masajista" });
   }else if(usuarioActual.idtipousuario == 2){
@@ -81,7 +81,7 @@ app.post("/login", async (req, res) => {
     }
 
     //Valida el tipo de usuario que loguea  
-    return validarTipo(res);
+    return res.json(validarTipo());
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
