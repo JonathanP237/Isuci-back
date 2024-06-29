@@ -81,7 +81,7 @@ app.post("/login", async (req, res) => {
     }
 
     //Valida el tipo de usuario que loguea  
-    return res.json({message: validarTipo()});
+    return res.json({message: await validarTipo()});
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
