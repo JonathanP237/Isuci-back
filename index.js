@@ -408,7 +408,8 @@ async function ValidarDatosPerfil1(idIngresado,res) {
   const user = result.rows[0];
   usuarioActual = user;
   console.log(usuarioActual.idtipousuario);
-  switch (usuarioActual.idtipousuario) {
+  const idTipoUsuario = parseInt(usuarioActual.idtipousuario);
+  switch (idTipoUsuario) {
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case 1:
       res.json({
