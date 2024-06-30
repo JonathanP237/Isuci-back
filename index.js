@@ -407,6 +407,7 @@ async function ValidarDatosPerfil1(idIngresado,res) {
   const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
   const user = result.rows[0];
   usuarioActual = user;
+  console.log(usuarioActual.idtipousuario);
   switch (usuarioActual.idtipousuario) {
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case 1:
