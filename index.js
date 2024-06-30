@@ -426,7 +426,7 @@ async function ValidarDatosPerfil1(idIngresado,res) {
       });
       break;
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
-    case 2:
+    case 3:
       res.json({
         idtipousuario: usuarioActual.idtipousuario,
         nombreusuario: usuarioActual.nombreusuario,
@@ -441,7 +441,7 @@ async function ValidarDatosPerfil1(idIngresado,res) {
       });
       break;
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, idtipocontextura, idespecialidad, genero, peso, potencia, aceleracion, velocidadpromedio, velocidadmaxima, tiempociclista, años experiencia, gradorampa
-    case 3:
+    case 4:
       res.json({
         idtipousuario: usuarioActual.idtipousuario,
         nombreusuario: usuarioActual.nombreusuario,
@@ -466,7 +466,7 @@ async function ValidarDatosPerfil1(idIngresado,res) {
       });
       break;
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais
-    case 4:
+    case 2:
       res.json({
         idtipousuario: usuarioActual.idtipousuario,
         nombreusuario: usuarioActual.nombreusuario,
