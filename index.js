@@ -91,7 +91,7 @@ app.get("/test", async (req, res) => {
  * Validates the type of the current user.
  * @returns {string} The type of the user.
  */
-async function validarTipo() {
+/*async function validarTipo() {
   if (usuarioActual.idtipousuario == 1) {
     return "Masajista";
   } else if (usuarioActual.idtipousuario == 2) {
@@ -101,7 +101,7 @@ async function validarTipo() {
   } else {
     return "Ciclista";
   }
-}
+}*/
 /**
  * @swagger
  * /login:
@@ -160,7 +160,8 @@ app.post("/login", async (req, res) => {
     }
 
     //Valida el tipo de usuario que loguea  
-    return res.json(await validarTipo());
+    //return res.json(await validarTipo());
+    return res.json({ message: "Inicio de sesión exitoso." });
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
