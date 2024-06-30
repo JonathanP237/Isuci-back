@@ -403,7 +403,7 @@ async function ValidarDatosPerfil(res) {
   }
 }
 
-async function ValidarDatosPerfil1(res) {
+async function ValidarDatosPerfil1(idIngresado,res) {
   const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
   const user = result.rows[0];
   usuarioActual = user;
@@ -507,16 +507,16 @@ async function ValidarDatosPerfil1(res) {
  *     description: No tienes permiso para ver este perfil.
  */
 app.get("/perfil/:iddocumento", (req, res) => {
-  if (!usuarioActual) {
+  /*if (!usuarioActual) {
     return res.status(401).json({ message: "No has iniciado sesión." });
   }
 
   // Asegurarse de que el iddocumento del usuarioActual coincide con el parámetro de la ruta
   if (req.params.iddocumento !== usuarioActual.iddocumento) {
     return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
-  }
+  }*/
 
-  return ValidarDatosPerfil1(res);
+  return ValidarDatosPerfil1(req.params.iddocumento,res);
 });
 
 app.listen(PORT, () => {
