@@ -14,6 +14,7 @@ import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 
 config();
 
@@ -48,6 +49,9 @@ const saltRounds = 10;
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json()); //// Esto es crucial
 app.use(bodyParser.json());
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
 
 
 /**
