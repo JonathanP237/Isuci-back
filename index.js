@@ -428,14 +428,14 @@ async function ValidarDatosPerfil(res) {
  *     description: No tienes permiso para ver este perfil.
  */
 app.get("/perfil/:iddocumento", (req, res) => {
-  if (!usuarioActual) {
+  /*if (!usuarioActual) {
     return res.status(401).json({ message: "No has iniciado sesión." });
   }
 
   // Asegurarse de que el iddocumento del usuarioActual coincide con el parámetro de la ruta
   if (req.params.iddocumento !== usuarioActual.iddocumento) {
     return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
-  }
+  }*/
 
   return ValidarDatosPerfil(res);
 });
