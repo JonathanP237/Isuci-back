@@ -91,7 +91,7 @@ app.get("/test", async (req, res) => {
  * Validates the type of the current user.
  * @returns {string} The type of the user.
  */
-/*async function validarTipo() {
+async function validarTipo() {
   if (usuarioActual.idtipousuario == 1) {
     return "Masajista";
   } else if (usuarioActual.idtipousuario == 2) {
@@ -101,7 +101,7 @@ app.get("/test", async (req, res) => {
   } else {
     return "Ciclista";
   }
-}*/
+}
 /**
  * @swagger
  * /login:
@@ -160,8 +160,7 @@ app.post("/login", async (req, res) => {
     }
 
     //Valida el tipo de usuario que loguea  
-    //return res.json(await validarTipo());
-    return res.json({ message: "Inicio de sesión exitoso." });
+    return res.json(await validarTipo());
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
@@ -403,6 +402,85 @@ async function ValidarDatosPerfil(res) {
       break;
   }
 }
+
+async function ValidarDatosPerfil1(res) {
+  const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
+  const user = result.rows[0];
+  usuarioActual = user;
+  switch (await validarTipo()) {
+    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
+    case 1:
+      res.json({
+        idtipousuario: usuarioActual.idtipousuario,
+        nombreusuario: usuarioActual.nombreusuario,
+        apellidousuario: usuarioActual.apellidousuario,
+        iddocumento: usuarioActual.iddocumento,
+        correousuario: usuarioActual.correousuario,
+        telefonousuario: usuarioActual.telefonousuario,
+        direccionusuario: usuarioActual.direccionusuario,
+        idpais: usuarioActual.idpais,
+        idescuadra: usuarioActual.idescuadra,
+        anosexperiencia: usuarioActual.anosexperiencia
+      });
+      break;
+    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
+    case 2:
+      res.json({
+        idtipousuario: usuarioActual.idtipousuario,
+        nombreusuario: usuarioActual.nombreusuario,
+        apellidousuario: usuarioActual.apellidousuario,
+        iddocumento: usuarioActual.iddocumento,
+        correousuario: usuarioActual.correousuario,
+        telefonousuario: usuarioActual.telefonousuario,
+        direccionusuario: usuarioActual.direccionusuario,
+        idpais: usuarioActual.idpais,
+        idescuadra: usuarioActual.idescuadra,
+        anosexperiencia: usuarioActual.anosexperiencia
+      });
+      break;
+    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, idtipocontextura, idespecialidad, genero, peso, potencia, aceleracion, velocidadpromedio, velocidadmaxima, tiempociclista, años experiencia, gradorampa
+    case 3:
+      res.json({
+        idtipousuario: usuarioActual.idtipousuario,
+        nombreusuario: usuarioActual.nombreusuario,
+        apellidousuario: usuarioActual.apellidousuario,
+        iddocumento: usuarioActual.iddocumento,
+        correousuario: usuarioActual.correousuario,
+        telefonousuario: usuarioActual.telefonousuario,
+        direccionusuario: usuarioActual.direccionusuario,
+        idpais: usuarioActual.idpais,
+        idescuadra: usuarioActual.idescuadra,
+        idtipocontextura: usuarioActual.idtipocontextura,
+        idespecialidad: usuarioActual.idespecialidad,
+        generousuario: usuarioActual.generousuario,
+        pesousuario: usuarioActual.pesousuario,
+        potenciausuario: usuarioActual.potenciausuario,
+        acelaracionusuario: usuarioActual.acelaracionusuario,
+        velocidadpromediousuario: usuarioActual.velocidadpromediousuario,
+        velocidadmaximausuario: usuarioActual.velocidadmaximausuario,
+        tiempociclista: usuarioActual.tiempociclista,
+        anosexperiencia: usuarioActual.anosexperiencia,
+        gradorampa: usuarioActual.gradorampa
+      });
+      break;
+    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais
+    case 4:
+      res.json({
+        idtipousuario: usuarioActual.idtipousuario,
+        nombreusuario: usuarioActual.nombreusuario,
+        apellidousuario: usuarioActual.apellidousuario,
+        iddocumento: usuarioActual.iddocumento,
+        correousuario: usuarioActual.correousuario,
+        telefonousuario: usuarioActual.telefonousuario,
+        direccionusuario: usuarioActual.direccionusuario,
+        idpais: usuarioActual.idpais
+      });
+      break;
+    default:
+      res.json({ message: "Tipo usuario incorrecto." });
+      break;
+  }
+}
 /**
  * @swagger
  * /perfil/{iddocumento}:
@@ -429,16 +507,16 @@ async function ValidarDatosPerfil(res) {
  *     description: No tienes permiso para ver este perfil.
  */
 app.get("/perfil/:iddocumento", (req, res) => {
-  /*if (!usuarioActual) {
+  if (!usuarioActual) {
     return res.status(401).json({ message: "No has iniciado sesión." });
   }
 
   // Asegurarse de que el iddocumento del usuarioActual coincide con el parámetro de la ruta
   if (req.params.iddocumento !== usuarioActual.iddocumento) {
     return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
-  }*/
+  }
 
-  return ValidarDatosPerfil(res);
+  return ValidarDatosPerfil1(res);
 });
 
 app.listen(PORT, () => {
