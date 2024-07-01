@@ -443,6 +443,7 @@ async function ValidarDatosPerfil1(idIngresado, res) {
     console.log(usuarioActual.idtipousuario);
     const idTipoUsuario = parseInt(usuarioActual.idtipousuario);
     const nombreEscuadra = await ValidarNombreEscuadra(usuarioActual.idescuadra);
+    const nombreEspecialidad = await ValidarEspecialidad(usuarioActual.idespecialidad);
     switch (idTipoUsuario) {
       case 1:
       case 3:
@@ -457,7 +458,8 @@ async function ValidarDatosPerfil1(idIngresado, res) {
           idpais: usuarioActual.idpais,
           idescuadra: usuarioActual.idescuadra,
           anosexperiencia: usuarioActual.anosexperiencia,
-          nombreEscuadra: nombreEscuadra
+          nombreEscuadra: nombreEscuadra,
+          nombreEspecialidad: nombreEspecialidad
         });
         break;
       case 4:
@@ -482,7 +484,8 @@ async function ValidarDatosPerfil1(idIngresado, res) {
           tiempociclista: usuarioActual.tiempociclista,
           anosexperiencia: usuarioActual.anosexperiencia,
           gradorampa: usuarioActual.gradorampa,
-          nombreEscuadra: nombreEscuadra
+          nombreEscuadra: nombreEscuadra,
+          nombreEspecialidad: nombreEspecialidad
         });
         break;
       case 2:
