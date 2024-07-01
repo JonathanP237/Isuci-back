@@ -403,84 +403,107 @@ async function ValidarDatosPerfil(res) {
   }
 }
 
-async function ValidarDatosPerfil1(idIngresado,res) {
-  const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
-  const user = result.rows[0];
-  usuarioActual = user;
-  console.log(usuarioActual.idtipousuario);
-  const idTipoUsuario = parseInt(usuarioActual.idtipousuario);
-  switch (idTipoUsuario) {
-    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
-    case 1:
-      res.json({
-        idtipousuario: usuarioActual.idtipousuario,
-        nombreusuario: usuarioActual.nombreusuario,
-        apellidousuario: usuarioActual.apellidousuario,
-        iddocumento: usuarioActual.iddocumento,
-        correousuario: usuarioActual.correousuario,
-        telefonousuario: usuarioActual.telefonousuario,
-        direccionusuario: usuarioActual.direccionusuario,
-        idpais: usuarioActual.idpais,
-        idescuadra: usuarioActual.idescuadra,
-        anosexperiencia: usuarioActual.anosexperiencia
-      });
-      break;
-    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
-    case 3:
-      res.json({
-        idtipousuario: usuarioActual.idtipousuario,
-        nombreusuario: usuarioActual.nombreusuario,
-        apellidousuario: usuarioActual.apellidousuario,
-        iddocumento: usuarioActual.iddocumento,
-        correousuario: usuarioActual.correousuario,
-        telefonousuario: usuarioActual.telefonousuario,
-        direccionusuario: usuarioActual.direccionusuario,
-        idpais: usuarioActual.idpais,
-        idescuadra: usuarioActual.idescuadra,
-        anosexperiencia: usuarioActual.anosexperiencia
-      });
-      break;
-    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, idtipocontextura, idespecialidad, genero, peso, potencia, aceleracion, velocidadpromedio, velocidadmaxima, tiempociclista, años experiencia, gradorampa
-    case 4:
-      res.json({
-        idtipousuario: usuarioActual.idtipousuario,
-        nombreusuario: usuarioActual.nombreusuario,
-        apellidousuario: usuarioActual.apellidousuario,
-        iddocumento: usuarioActual.iddocumento,
-        correousuario: usuarioActual.correousuario,
-        telefonousuario: usuarioActual.telefonousuario,
-        direccionusuario: usuarioActual.direccionusuario,
-        idpais: usuarioActual.idpais,
-        idescuadra: usuarioActual.idescuadra,
-        idtipocontextura: usuarioActual.idtipocontextura,
-        idespecialidad: usuarioActual.idespecialidad,
-        generousuario: usuarioActual.generousuario,
-        pesousuario: usuarioActual.pesousuario,
-        potenciausuario: usuarioActual.potenciausuario,
-        acelaracionusuario: usuarioActual.acelaracionusuario,
-        velocidadpromediousuario: usuarioActual.velocidadpromediousuario,
-        velocidadmaximausuario: usuarioActual.velocidadmaximausuario,
-        tiempociclista: usuarioActual.tiempociclista,
-        anosexperiencia: usuarioActual.anosexperiencia,
-        gradorampa: usuarioActual.gradorampa
-      });
-      break;
-    //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais
-    case 2:
-      res.json({
-        idtipousuario: usuarioActual.idtipousuario,
-        nombreusuario: usuarioActual.nombreusuario,
-        apellidousuario: usuarioActual.apellidousuario,
-        iddocumento: usuarioActual.iddocumento,
-        correousuario: usuarioActual.correousuario,
-        telefonousuario: usuarioActual.telefonousuario,
-        direccionusuario: usuarioActual.direccionusuario,
-        idpais: usuarioActual.idpais
-      });
-      break;
-    default:
-      res.json({ message: "Tipo usuario incorrecto." });
-      break;
+async function ValidarEspecialidad(idespecialidad){
+  try {
+    const result = await pool.query("SELECT * FROM especialidades WHERE idescuadra = $1 LIMIT 1", [idespecialidad]);
+    if (result.rows.length === 0) {
+      throw new Error("Especialidad no encontrada");
+    }
+    const nombreEspecialidad = result.rows[0].desespecialidad;
+    return nombreEspecialidad;
+  } catch (error) {
+    // Aquí puedes manejar el error como prefieras, por ejemplo, devolver un mensaje de error
+    console.error(error.message);
+    return "No registrado en ninguna"; // O manejarlo de otra manera
+  }
+}
+
+async function ValidarNombreEscuadra(idescuadra){
+  try {
+    const result = await pool.query("SELECT * FROM escuadras WHERE idescuadra = $1 LIMIT 1", [idescuadra]);
+    if (result.rows.length === 0) {
+      throw new Error("No registra especialidad");
+    }
+    const nombreEscuadra = result.rows[0].desescuadra;
+    return nombreEscuadra;
+  } catch (error) {
+    // Aquí puedes manejar el error como prefieras, por ejemplo, devolver un mensaje de error
+    console.error(error.message);
+    return error.message; // O manejarlo de otra manera
+  }
+}
+
+async function ValidarDatosPerfil1(idIngresado, res) {
+  try {
+    const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
+    if (result.rows.length === 0) {
+      throw new Error("Usuario no encontrado");
+    }
+    const usuarioActual = result.rows[0];
+    console.log(usuarioActual.idtipousuario);
+    const idTipoUsuario = parseInt(usuarioActual.idtipousuario);
+    const nombreEscuadra = await ValidarNombreEscuadra(usuarioActual.idescuadra);
+    switch (idTipoUsuario) {
+      case 1:
+      case 3:
+        res.json({
+          idtipousuario: usuarioActual.idtipousuario,
+          nombreusuario: usuarioActual.nombreusuario,
+          apellidousuario: usuarioActual.apellidousuario,
+          iddocumento: usuarioActual.iddocumento,
+          correousuario: usuarioActual.correousuario,
+          telefonousuario: usuarioActual.telefonousuario,
+          direccionusuario: usuarioActual.direccionusuario,
+          idpais: usuarioActual.idpais,
+          idescuadra: usuarioActual.idescuadra,
+          anosexperiencia: usuarioActual.anosexperiencia,
+          nombreEscuadra: nombreEscuadra
+        });
+        break;
+      case 4:
+        res.json({
+          idtipousuario: usuarioActual.idtipousuario,
+          nombreusuario: usuarioActual.nombreusuario,
+          apellidousuario: usuarioActual.apellidousuario,
+          iddocumento: usuarioActual.iddocumento,
+          correousuario: usuarioActual.correousuario,
+          telefonousuario: usuarioActual.telefonousuario,
+          direccionusuario: usuarioActual.direccionusuario,
+          idpais: usuarioActual.idpais,
+          idescuadra: usuarioActual.idescuadra,
+          idtipocontextura: usuarioActual.idtipocontextura,
+          idespecialidad: usuarioActual.idespecialidad,
+          generousuario: usuarioActual.generousuario,
+          pesousuario: usuarioActual.pesousuario,
+          potenciausuario: usuarioActual.potenciausuario,
+          acelaracionusuario: usuarioActual.acelaracionusuario,
+          velocidadpromediousuario: usuarioActual.velocidadpromediousuario,
+          velocidadmaximausuario: usuarioActual.velocidadmaximausuario,
+          tiempociclista: usuarioActual.tiempociclista,
+          anosexperiencia: usuarioActual.anosexperiencia,
+          gradorampa: usuarioActual.gradorampa,
+          nombreEscuadra: nombreEscuadra
+        });
+        break;
+      case 2:
+        res.json({
+          idtipousuario: usuarioActual.idtipousuario,
+          nombreusuario: usuarioActual.nombreusuario,
+          apellidousuario: usuarioActual.apellidousuario,
+          iddocumento: usuarioActual.iddocumento,
+          correousuario: usuarioActual.correousuario,
+          telefonousuario: usuarioActual.telefonousuario,
+          direccionusuario: usuarioActual.direccionusuario,
+          idpais: usuarioActual.idpais
+        });
+        break;
+      default:
+        res.json({ message: "Tipo usuario incorrecto." });
+        break;
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(404).json({ message: error.message });
   }
 }
 /**
