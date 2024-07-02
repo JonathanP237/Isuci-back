@@ -405,7 +405,7 @@ async function ValidarDatosPerfil(res) {
 
 async function ValidarEspecialidad(idespecialidad){
   try {
-    const result = await pool.query("SELECT * FROM especialidades WHERE idescuadra = $1 LIMIT 1", [idespecialidad]);
+    const result = await pool.query("SELECT * FROM especialidades WHERE idespecialidad = $1 LIMIT 1", [idespecialidad]);
     if (result.rows.length === 0) {
       throw new Error("Especialidad no encontrada");
     }
@@ -422,7 +422,7 @@ async function ValidarNombreEscuadra(idescuadra){
   try {
     const result = await pool.query("SELECT * FROM escuadras WHERE idescuadra = $1 LIMIT 1", [idescuadra]);
     if (result.rows.length === 0) {
-      throw new Error("No registra especialidad");
+      throw new Error("No registra escuadra");
     }
     const nombreEscuadra = result.rows[0].desescuadra;
     return nombreEscuadra;
@@ -458,8 +458,7 @@ async function ValidarDatosPerfil1(idIngresado, res) {
           idpais: usuarioActual.idpais,
           idescuadra: usuarioActual.idescuadra,
           anosexperiencia: usuarioActual.anosexperiencia,
-          nombreEscuadra: nombreEscuadra,
-          nombreEspecialidad: nombreEspecialidad
+          nombreEscuadra: nombreEscuadra
         });
         break;
       case 4:
