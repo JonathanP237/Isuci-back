@@ -435,7 +435,7 @@ async function ValidarNombreEscuadra(idescuadra){
 
 async function ValidarDatosPerfil1(res) {
   try {
-    const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
+    const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuarioActual.iddocumento]);
     if (result.rows.length === 0) {
       throw new Error("Usuario no encontrado");
     }
