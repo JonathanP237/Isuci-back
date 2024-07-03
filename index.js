@@ -284,11 +284,11 @@ app.post("/registro", async (req, res) => {
     `;
 
     const valores = [
-      req.body.iddocumento, req.body.iddocumento, req.body.idtipousuario, req.body.idtipocontextura, req.body.idpais,
-      req.body.idespecialidad, req.body.idescuadra, req.body.tipodocumentousuario, req.body.nombreusuario,
+      req.body.iddocumento, req.body.iddocumento, req.body.idtipousuario, null, req.body.idpais,
+      null, null, req.body.tipodocumentousuario, req.body.nombreusuario,
       req.body.apellidousuario, req.body.generousuario, req.body.correousuario, hashedPassword, // Usar la contraseña hasheada
-      req.body.pesousuario, req.body.potenciausuario, req.body.acelaracionusuario, req.body.velocidadpromediousuario,
-      req.body.velocidadmaximausuario, req.body.tiempociclista, req.body.anosexperiencia, req.body.gradorampa
+      null, null, null, null,
+      null, null, req.body.anosexperiencia, null
     ];
 
     await pool.query(sql, valores);
