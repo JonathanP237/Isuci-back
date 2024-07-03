@@ -162,6 +162,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
     }    
     //Valida el tipo de usuario que logueaa  
+    console.log(usuarioActual.idtipousuario);
     return res.json(validarTipo());
   } catch (error) {
     console.error(error);
@@ -436,7 +437,7 @@ async function ValidarNombreEscuadra(idescuadra){
 }
 
 async function ValidarDatosPerfil1(res) {
-  try {
+  try {    
     const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuarioActual.iddocumento]);
     if (result.rows.length === 0) {
       throw new Error("Usuario no encontrado");
