@@ -549,22 +549,3 @@ app.get("/perfil/:iddocumento", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
-
-
-if (!iddocumento) { 
-iddocumento = defaultIddocumento;
-}
-const [isLoading, setisloading] = useState<boolean>(true); 
-const [ciclista, setCiclista] = useState<Ciclista | null>(null); 
-const [error, setError] = useState<string | null>(null);
-useEffect(()=>{
-const fetchCiclista = async () => {
-try {
-  const response = await axios.get<Ciclista>('https://isuci-back.onrender.com/perfil/${iddocumento}*');
-  setCiclista(response.data);
-  setIsLoading(false);
-} catch (error: any){
-  setError(error.message ?? 'Error desco setIsLoading(false)');
-}
-});
-
