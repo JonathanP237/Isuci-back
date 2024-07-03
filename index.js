@@ -66,8 +66,17 @@ async function autUsuario(usuario, contrasenaIngresada) {
   if (result.rows.length > 0) {
     const user = result.rows[0];    
     usuarioActual = user;
+    console.log("Usuario actual: ", usuarioActual.iddocumento); // Corrige "console.lo0g" a "console.log"
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
+    if(passwordMatch) {
+      // Asegúrate de que usuarioActual tenga la propiedad idtipousuario
+      if(usuarioActual.idtipousuario !== undefined) {
+        // Aquí puedes llamar a validarTipo
+      } else {
+        throw new Error("Usuario actual no válido o idtipousuario no definido");
+      }
+    }
     return passwordMatch;
   }
   return false;
