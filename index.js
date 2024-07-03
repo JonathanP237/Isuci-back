@@ -433,7 +433,7 @@ async function ValidarNombreEscuadra(idescuadra){
   }
 }
 
-async function ValidarDatosPerfil1(res) {
+async function ValidarDatosPerfil1(idIngresado, res) {
   try {
     const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
     if (result.rows.length === 0) {
@@ -533,7 +533,7 @@ async function ValidarDatosPerfil1(res) {
  *    403:
  *     description: No tienes permiso para ver este perfil.
  */
-app.get("/perfil", (req, res) => {
+app.get("/perfil/:iddocumento", (req, res) => {
   /*if (!usuarioActual) {
     return res.status(401).json({ message: "No has iniciado sesión." });
   }
@@ -543,9 +543,10 @@ app.get("/perfil", (req, res) => {
     return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
   }*/
 
-  return ValidarDatosPerfil1(res);
+  return ValidarDatosPerfil1(req.params.iddocumento,res);
 });
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
+
