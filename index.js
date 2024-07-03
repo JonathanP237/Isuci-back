@@ -90,8 +90,7 @@ app.get("/test", async (req, res) => {
  * Validates the type of the current user.
  * @returns {string} The type of the user.
  */
-async function validarTipo() {
-  usuarioActual = user;
+async function validarTipo() {  
   if (usuarioActual.idtipousuario == 1) {
     return "Masajista";
   } else if (usuarioActual.idtipousuario == 2) {
@@ -158,9 +157,9 @@ app.post("/login", async (req, res) => {
     if (!userAuthenticated) {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
     }
-
+    usuarioActual = user;
     //Valida el tipo de usuario que logueaa  
-    return res.json(await validarTipo());
+    return res.json(validarTipo());
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
