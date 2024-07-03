@@ -62,6 +62,7 @@ app.use(cors({
  */
 async function autUsuario(usuario, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuario]);
+  usuarioActual = user;
   if (result.rows.length > 0) {
     const user = result.rows[0];    
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
@@ -156,8 +157,7 @@ app.post("/login", async (req, res) => {
     const userAuthenticated = await autUsuario(usuario, password);
     if (!userAuthenticated) {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
-    }
-    usuarioActual = user;
+    }    
     //Valida el tipo de usuario que logueaa  
     return res.json(validarTipo());
   } catch (error) {
