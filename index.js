@@ -93,6 +93,7 @@ app.get("/test", async (req, res) => {
  * @returns {string} The type of the user.
  */
 async function validarTipo() {  
+  console.log(usuarioActual.idtipousuario);
   if (usuarioActual.idtipousuario == 1) {
     return "Masajista";
   } else if (usuarioActual.idtipousuario == 2) {
