@@ -18,7 +18,7 @@ import cors from 'cors';
 
 config();
 
-let usuarioActual = null;
+let usuarioLogin = null;
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -65,13 +65,13 @@ async function autUsuario(usuario, contrasenaIngresada) {
   
   if (result.rows.length > 0) {
     const user = result.rows[0];    
-    usuarioActual = user;
-    console.log("Usuario actual: ", usuarioActual.iddocumento); // Corrige "console.lo0g" a "console.log"
+    usuarioLogin = user;
+    console.log("Usuario actual: ", usuarioLogin.iddocumento); // Corrige "console.lo0g" a "console.log"
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
     if(passwordMatch) {
       // Asegúrate de que usuarioActual tenga la propiedad idtipousuario
-      if(usuarioActual.idtipousuario !== undefined) {
+      if(usuarioLogin.idtipousuario !== undefined) {
         // Aquí puedes llamar a validarTipo
       } else {
         throw new Error("Usuario actual no válido o idtipousuario no definido");
@@ -101,9 +101,9 @@ app.get("/test", async (req, res) => {
  * Validates the type of the current user.
  * @returns {string} The type of the user.
  */
-async function validarTipo(usuarioActual) {
-  const idTipo = parseInt(usuarioActual.idtipousuario, 10);
-  if (!usuarioActual) {
+async function validarTipo(usuarioLogin) {
+  const idTipo = parseInt(usuarioLogin.idtipousuario, 10);
+  if (!usuarioLogin) {
     throw new Error("Usuario actual no válido o idtipousuario no definido");
   }
 
@@ -113,7 +113,7 @@ async function validarTipo(usuarioActual) {
     3: "Director"
   };
 
-  return tiposDeUsuario[usuarioActual.idtipousuario] || "Ciclista";
+  return tiposDeUsuario[usuarioLogin.idtipousuario] || "Ciclista";
 }
 
 app.post("/login", async (req, res) => {
@@ -139,8 +139,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
     }    
     //Valida el tipo de usuario que logueaa  
-    console.log(validarTipo(usuarioActual));
-    return res.json(await validarTipo(usuarioActual));
+    return res.json(await validarTipo(usuarioLogin));
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
@@ -415,7 +414,7 @@ async function ValidarNombreEscuadra(idescuadra){
 
 async function ValidarDatosPerfil1(res) {
   try {    
-    const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuarioActual.iddocumento]);
+    const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuarioLogin.iddocumento]);
     if (result.rows.length === 0) {
       throw new Error("Usuario no encontrado");
     }
