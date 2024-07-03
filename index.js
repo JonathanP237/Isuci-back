@@ -162,7 +162,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
     }    
     //Valida el tipo de usuario que logueaa  
-    console.log(usuarioActual.idtipousuario);
+    console.log(validarTipo());
     return res.json(validarTipo());
   } catch (error) {
     console.error(error);
