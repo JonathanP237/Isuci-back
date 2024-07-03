@@ -115,41 +115,7 @@ async function validarTipo(usuarioActual) {
 
   return tiposDeUsuario[usuarioActual.idtipousuario] || "Ciclista";
 }
-/**
- * @swagger
- * /login:
- *  post:
- *    summary: Inicia sesión en la aplicación.
- *    description: Este endpoint permite iniciar sesión en la aplicación con un usuario y contraseña.
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              usuario:
- *                type: string
- *                description: El ID del usuario.
- *                example: 123456789
- *              password:
- *                type: string
- *                description: La contraseña del usuario.
- *                example: password123
- *              recaptchaToken:
- *                type: string
- *                description: El token del captcha.
- *    responses:
- *      200:
- *        description: Inicio de sesión exitoso.
- *      401:
- *        description: Usuario o contraseña incorrectos.
- *      400:
- *        description: Faltan el usuario o la contraseña.
- *      500:
- *        description: Error interno del servidor.
- *  
- */
+
 app.post("/login", async (req, res) => {
   try {
     const { usuario, password, recaptchaToken } = req.body;
@@ -174,7 +140,7 @@ app.post("/login", async (req, res) => {
     }    
     //Valida el tipo de usuario que logueaa  
     console.log(validarTipo(usuarioActual));
-    return res.json(validarTipo(usuarioActual));
+    return res.json(await validarTipo(usuarioActual));
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
