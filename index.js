@@ -102,7 +102,8 @@ app.get("/test", async (req, res) => {
  * @returns {string} The type of the user.
  */
 async function validarTipo(usuarioActual) {
-  if (!usuarioActual || typeof usuarioActual.idtipousuario !== 'number') {
+  const idTipo = parseInt(usuarioActual.idtipousuario, 10);
+  if (!usuarioActual) {
     throw new Error("Usuario actual no válido o idtipousuario no definido");
   }
 
