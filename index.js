@@ -50,7 +50,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json()); //// Esto es crucial
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: 'http://localhost:3000',
 }));
 
 
@@ -327,7 +327,7 @@ app.post("/registro", async (req, res) => {
  * @param {object} res - The response object used to send the JSON response.
  * @returns {void}
  */
-async function ValidarDatosPerfil(res) {
+/*async function ValidarDatosPerfil(res) {
   switch (await validarTipo()) {
     //devuelve así: tipo usuario, nombre, apellido, iddocumento, correo, telefono, dirección, idpais, idescuadra, años experiencia
     case "Masajista":
@@ -401,7 +401,7 @@ async function ValidarDatosPerfil(res) {
       res.json({ message: "Tipo usuario incorrecto." });
       break;
   }
-}
+}*/
 
 async function ValidarEspecialidad(idespecialidad){
   try {
@@ -433,7 +433,7 @@ async function ValidarNombreEscuadra(idescuadra){
   }
 }
 
-async function ValidarDatosPerfil1(idIngresado, res) {
+async function ValidarDatosPerfil1(res) {
   try {
     const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
     if (result.rows.length === 0) {
