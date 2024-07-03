@@ -92,17 +92,18 @@ app.get("/test", async (req, res) => {
  * Validates the type of the current user.
  * @returns {string} The type of the user.
  */
-async function validarTipo() {  
-  console.log(usuarioActual.idtipousuario);
-  if (usuarioActual.idtipousuario == 1) {
-    return "Masajista";
-  } else if (usuarioActual.idtipousuario == 2) {
-    return "Administrador";
-  } else if (usuarioActual.idtipousuario == 3) {
-    return "Director";
-  } else {
-    return "Ciclista";
+async function validarTipo(usuarioActual) {
+  if (!usuarioActual || typeof usuarioActual.idtipousuario !== 'number') {
+    throw new Error("Usuario actual no válido o idtipousuario no definido");
   }
+
+  const tiposDeUsuario = {
+    1: "Masajista",
+    2: "Administrador",
+    3: "Director"
+  };
+
+  return tiposDeUsuario[usuarioActual.idtipousuario] || "Ciclista";
 }
 /**
  * @swagger
@@ -162,8 +163,8 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
     }    
     //Valida el tipo de usuario que logueaa  
-    console.log(validarTipo());
-    return res.json(validarTipo());
+    console.log(validarTipo(usuarioActual));
+    return res.json(validarTipo(usuarioActual));
   } catch (error) {
     console.error(error);
     // Aquí puedes agregar manejo de errores más específico basado en el error devuelto
