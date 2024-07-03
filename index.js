@@ -63,8 +63,7 @@ app.use(cors({
 async function autUsuario(usuario, contrasenaIngresada) {
   const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuario]);
   if (result.rows.length > 0) {
-    const user = result.rows[0];
-    usuarioActual = user;
+    const user = result.rows[0];    
     // Compara la contraseña proporcionada con la contraseña hasheada almacenada
     const passwordMatch = await bcrypt.compare(contrasenaIngresada, user.contrasenausuario);
     return passwordMatch;
@@ -92,6 +91,7 @@ app.get("/test", async (req, res) => {
  * @returns {string} The type of the user.
  */
 async function validarTipo() {
+  usuarioActual = user;
   if (usuarioActual.idtipousuario == 1) {
     return "Masajista";
   } else if (usuarioActual.idtipousuario == 2) {
@@ -159,7 +159,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Usuario o contraseña incorrectos." });
     }
 
-    //Valida el tipo de usuario que loguea  
+    //Valida el tipo de usuario que logueaa  
     return res.json(await validarTipo());
   } catch (error) {
     console.error(error);
