@@ -56,12 +56,12 @@ app.use(cors({
 
 /**
  * Authenticates a user by checking if the provided ID and password match the stored values.
- * @param {string} idIngresado - The ID of the user to authenticate.
+ * @param {string} usuario - The ID of the user to authenticate.
  * @param {string} contrasenaIngresada - The password of the user to authenticate.
  * @returns {Promise<boolean>} - A promise that resolves to true if the authentication is successful, false otherwise.
  */
-async function autUsuario(idIngresado, contrasenaIngresada) {
-  const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [idIngresado]);
+async function autUsuario(usuario, contrasenaIngresada) {
+  const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuario]);
   if (result.rows.length > 0) {
     const user = result.rows[0];
     usuarioActual = user;
