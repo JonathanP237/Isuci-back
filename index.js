@@ -412,6 +412,20 @@ async function ValidarNombreEscuadra(idescuadra){
   }
 }
 
+async function ValidarNombrePais(idpais){
+  try{
+    const result = await pool.query("SELECT * FROM paises WHERE idpais = $1 LIMIT 1", [idpais]);
+    if (result.rows.length === 0) {
+      throw new Error("No registra pais");
+    }
+    const nombrePais = result.rows[0].despais;
+    return nombrePais;
+  } catch (error) {
+    console.error(error.message);
+    return error.message;    
+  }
+}
+
 async function ValidarDatosPerfil1(res) {
   try {    
     const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuarioLogin.iddocumento]);
@@ -423,6 +437,7 @@ async function ValidarDatosPerfil1(res) {
     const idTipoUsuario = parseInt(usuarioActual.idtipousuario);
     const nombreEscuadra = await ValidarNombreEscuadra(usuarioActual.idescuadra);
     const nombreEspecialidad = await ValidarEspecialidad(usuarioActual.idespecialidad);
+    const nombrePais = await ValidarNombrePais(usuarioActual.idpais);
     switch (idTipoUsuario) {
       case 1:
       case 3:
@@ -434,7 +449,7 @@ async function ValidarDatosPerfil1(res) {
           correousuario: usuarioActual.correousuario,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
-          idpais: usuarioActual.idpais,
+          idpais: nombrePais,
           idescuadra: usuarioActual.idescuadra,
           anosexperiencia: usuarioActual.anosexperiencia,
           nombreEscuadra: nombreEscuadra
@@ -449,7 +464,7 @@ async function ValidarDatosPerfil1(res) {
           correousuario: usuarioActual.correousuario,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
-          idpais: usuarioActual.idpais,
+          idpais: nombrePais,
           idescuadra: usuarioActual.idescuadra,
           idtipocontextura: usuarioActual.idtipocontextura,
           idespecialidad: usuarioActual.idespecialidad,
@@ -475,7 +490,7 @@ async function ValidarDatosPerfil1(res) {
           correousuario: usuarioActual.correousuario,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
-          idpais: usuarioActual.idpais
+          idpais: nombrePais
         });
         break;
       default:
