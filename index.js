@@ -319,7 +319,7 @@ app.post("/registro", async (req, res) => {
     `;
 
     const valores = [
-      nuevoID, parseInt(req.body.iddocumento,10), idtipousuario, null, null, null, req.body.documentousuario, req.body.nombreusuario,
+      parseInt(req.body.iddocumento,10), parseInt(req.body.iddocumento,10), idtipousuario, null, null, null, req.body.documentousuario, req.body.nombreusuario,
       req.body.apellidousuario, req.body.generousuario, req.body.fechanacimiento, req.body.correousuario, hashedPassword, 
       req.body.nacionalidad, null, null, null, null, null, null, req.body.fechainiciocarrera, null
     ];
