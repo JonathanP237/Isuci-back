@@ -312,15 +312,16 @@ app.post("/registro", async (req, res) => {
     
     const sql = ` 
       INSERT INTO USUARIO (
-        IDUSUARIO, IDDOCUMENTO, IDTIPOUSUARIO, DOCUMENTOUSUARIO, NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, 
-        FECHANACIMIENTO, CORREOUSUARIO, CONTRASENAUSUARIO, NACIONALIDAD, FECHAINICIOCARRERA
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        IDUSUARIO, IDDOCUMENTO, IDTIPOUSUARIO, IDTIPOCONTEXTURA, IDESPECIALDAD, IDESCUADRA, DOCUMENTOUSUARIO, 
+        NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, FECHANACIMIENTO, CORREOUSUARIO, CONTRASENAUSUARIO, NACIONALIDAD, 
+        PESOUSUARIO, POTENCIAUSUARIO, ACELERACIONUSUARIO, VELOCIDADPROMEDIOUSUARIO, VELOCIDADMAXIMAUSUARIO, TIEMPOCICLISTA, FECHAINICIOCARRERA, GRADORAMPA
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
     `;
 
     const valores = [
-      nuevoID, parseInt(req.body.iddocumento,10), idtipousuario, req.body.documentousuario, req.body.nombreusuario,
+      nuevoID, parseInt(req.body.iddocumento,10), idtipousuario, null, null, null, req.body.documentousuario, req.body.nombreusuario,
       req.body.apellidousuario, req.body.generousuario, req.body.fechanacimiento, req.body.correousuario, hashedPassword, 
-      req.body.nacionalidad,req.body.fechainiciocarrera
+      req.body.nacionalidad, null, null, null, null, null, null, req.body.fechainiciocarrera, null
     ];
 
     await pool.query(sql, valores);
