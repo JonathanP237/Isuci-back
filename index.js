@@ -456,7 +456,6 @@ async function ValidarDatosPerfil1(res) {
     const idTipoUsuario = parseInt(usuarioActual.idtipousuario);
     const nombreEscuadra = await ValidarNombreEscuadra(usuarioActual.idescuadra);
     const nombreEspecialidad = await ValidarEspecialidad(usuarioActual.idespecialidad);
-    const nombrePais = await ValidarNombrePais(usuarioActual.idpais);
     switch (idTipoUsuario) {
       case 1:
       case 3:
@@ -468,7 +467,6 @@ async function ValidarDatosPerfil1(res) {
           correousuario: usuarioActual.correousuario,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
-          idpais: nombrePais,
           idescuadra: usuarioActual.idescuadra,
           anosexperiencia: usuarioActual.anosexperiencia,
           nombreEscuadra: nombreEscuadra
@@ -483,7 +481,6 @@ async function ValidarDatosPerfil1(res) {
           correousuario: usuarioActual.correousuario,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
-          idpais: nombrePais,
           idescuadra: usuarioActual.idescuadra,
           idtipocontextura: usuarioActual.idtipocontextura,
           idespecialidad: usuarioActual.idespecialidad,
@@ -509,7 +506,6 @@ async function ValidarDatosPerfil1(res) {
           correousuario: usuarioActual.correousuario,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
-          idpais: nombrePais
         });
         break;
       default:
