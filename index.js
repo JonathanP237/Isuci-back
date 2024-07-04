@@ -412,20 +412,6 @@ async function ValidarNombreEscuadra(idescuadra){
   }
 }
 
-async function ValidarNombrePais(idpais){
-  try{
-    const result = await pool.query("SELECT * FROM paises WHERE idpais = $1 LIMIT 1", [idpais]);
-    if (result.rows.length === 0) {
-      throw new Error("No registra pais");
-    }
-    const nombrePais = result.rows[0].despais;
-    return nombrePais;
-  } catch (error) {
-    console.error(error.message);
-    return error.message;    
-  }
-}
-
 async function ValidarDatosPerfil1(res) {
   try {    
     const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuarioLogin.iddocumento]);
