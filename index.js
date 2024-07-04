@@ -481,6 +481,7 @@ async function ValidarDatosPerfil1(res) {
           apellidousuario: usuarioActual.apellidousuario,
           iddocumento: usuarioActual.iddocumento,
           correousuario: usuarioActual.correousuario,
+          idpais: usuarioActual.nacionalidad,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
           idescuadra: usuarioActual.idescuadra,
@@ -495,6 +496,7 @@ async function ValidarDatosPerfil1(res) {
           apellidousuario: usuarioActual.apellidousuario,
           iddocumento: usuarioActual.iddocumento,
           correousuario: usuarioActual.correousuario,
+          idpais: usuarioActual.nacionalidad,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
           idescuadra: usuarioActual.idescuadra,
@@ -520,6 +522,7 @@ async function ValidarDatosPerfil1(res) {
           apellidousuario: usuarioActual.apellidousuario,
           iddocumento: usuarioActual.iddocumento,
           correousuario: usuarioActual.correousuario,
+          idpais: usuarioActual.nacionalidad,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
         });
