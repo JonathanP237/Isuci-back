@@ -303,7 +303,7 @@ async function validarTipoUsuario(tipousuario){
 app.post("/registro", async (req, res) => {
   const { contrasenausuario } = req.body;
   const { cantidadRegistros } = await validarCantidadRegistros();
-  const nuevoID = parseInt(cantidadRegistros) + 1;
+  const nuevoID = parseInt(cantidadRegistros,10) + 1;
   const {tipousuario} = req.body;
   const {idtipousuario} = await validarTipoUsuario(tipousuario);
   try {
