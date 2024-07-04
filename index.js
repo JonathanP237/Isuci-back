@@ -7,7 +7,7 @@
  */
 // server/index.js
 import pg from 'pg';
-import { config } from 'dotenv';
+import { config, parse } from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
@@ -268,27 +268,59 @@ async function enviarCorreoConfirmacion(emailDestino) {
  * 
  * 
  */
+async function validarCantidadRegistros(){
+  try {
+    const result = await pool.query("SELECT COUNT(*) FROM usuario");
+    const cantidadRegistros = result.rows[0].count;
+    return cantidadRegistros;
+  } catch (error) {
+    console.error(error.message);
+    return error.message;
+  }
+}
+
+async function validarTipoUsuario(tipousuario){
+  try {
+    const result = await pool.query("SELECT * FROM tipousuario WHERE destipousuario = $1 LIMIT 1", [tipousuario]);
+    if (result.rows.length === 0) {
+      throw new Error("No registra tipo usuario");
+    }
+    
+    const tiposDeUsuario = {
+      "Masajista": 1,
+      "Administrador": 2,
+      "Director": 3,
+      "Ciclista": 4
+    };
+  
+    return tiposDeUsuario[tipousuario];
+  }catch (error) {
+    console.error(error.message);
+    return error.message;
+  }
+}
+
 app.post("/registro", async (req, res) => {
   const { contrasenausuario } = req.body;
+  const { cantidadRegistros } = await validarCantidadRegistros();
+  const nuevoID = parseInt(cantidadRegistros) + 1;
+  const {tipousuario} = req.body;
+  const {idtipousuario} = await validarTipoUsuario(tipousuario);
   try {
     // Hashing de la contraseña
     const hashedPassword = await bcrypt.hash(contrasenausuario, saltRounds);
-
+    
     const sql = ` 
       INSERT INTO USUARIO (
-        IDUSUARIO, IDDOCUMENTO, IDTIPOUSUARIO, IDTIPOCONTEXTURA, IDPAIS, IDESPECIALIDAD, IDESCUADRA, 
-        TIPODOCUMENTOUSUARIO, NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, CORREOUSUARIO, 
-        CONTRASENAUSUARIO, PESOUSUARIO, POTENCIAUSUARIO, ACELARACIONUSUARIO, 
-        VELOCIDADPROMEDIOUSUARIO, VELOCIDADMAXIMAUSUARIO, TIEMPOCICLISTA, ANOSEXPERIENCIA, GRADORAMPA
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)
+        IDUSUARIO, IDDOCUMENTO, IDTIPOUSUARIO, DOCUMENTOUSUARIO, NOMBREUSUARIO, APELLIDOUSUARIO, GENEROUSUARIO, 
+        FECHANACIMIENTO, CORREOUSUARIO, CONTRASENAUSUARIO, NACIONALIDAD, FECHAINICIOCARRERA
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
     `;
 
     const valores = [
-      req.body.iddocumento, req.body.iddocumento, req.body.idtipousuario, null, req.body.idpais,
-      null, null, req.body.tipodocumentousuario, req.body.nombreusuario,
-      req.body.apellidousuario, req.body.generousuario, req.body.correousuario, hashedPassword, // Usar la contraseña hasheada
-      null, null, null, null,
-      null, null, req.body.anosexperiencia, null
+      nuevoID, req.body.iddocumento, idtipousuario, req.body.documentousuario, req.body.nombreusuario,
+      req.body.apellidousuario, req.body.generousuario, req.body.fechanacimiento, req.body.correousuario, hashedPassword, 
+      req.body.nacionalidad,req.body.fechainiciocarrera
     ];
 
     await pool.query(sql, valores);
