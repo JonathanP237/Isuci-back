@@ -84,15 +84,14 @@ async function autUsuario(usuario, contrasenaIngresada) {
 
 async function hashPasswords() {
   try {
-    const users = await client.query('SELECT idusuario, contrasenausuario FROM usuario'); // Obtener todos los usuarios y sus contraseñas
+    const users = await pool.query('SELECT idusuario, contrasenausuario FROM usuario'); // Obtener todos los usuarios y sus contraseñas
 
     for (let user of users.rows) {
       const hashedPassword = await bcrypt.hash(user.contrasenausuario, saltRounds); // Hashear la contraseña
-      await client.query('UPDATE usuario SET contrasenausuario = $1 WHERE idusuario = $2', [hashedPassword, user.idusuario]); // Actualizar la contraseña hasheada en la base de datos
+      await pool.query('UPDATE usuario SET contrasenausuario = $1 WHERE idusuario = $2', [hashedPassword, user.idusuario]); // Actualizar la contraseña hasheada en la base de datos
     }
 
     console.log('Todas las contraseñas han sido hasheadas y actualizadas.');
-    client.release(); // Liberar el cliente de la conexión a la base de datos
   } catch (error) {
     console.error('Error al hashear las contraseñas:', error);
   }
@@ -485,7 +484,7 @@ async function ValidarDatosPerfil1(res) {
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
           idescuadra: usuarioActual.idescuadra,
-          anosexperiencia: usuarioActual.anosexperiencia,
+          anosexperiencia: usuarioActual.fechainiciocarrera,
           nombreEscuadra: nombreEscuadra
         });
         break;
@@ -508,7 +507,7 @@ async function ValidarDatosPerfil1(res) {
           velocidadpromediousuario: usuarioActual.velocidadpromediousuario,
           velocidadmaximausuario: usuarioActual.velocidadmaximausuario,
           tiempociclista: usuarioActual.tiempociclista,
-          anosexperiencia: usuarioActual.anosexperiencia,
+          anosexperiencia: usuarioActual.fechainiciocarrera,
           gradorampa: usuarioActual.gradorampa,
           nombreEscuadra: nombreEscuadra,
           nombreEspecialidad: nombreEspecialidad
