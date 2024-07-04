@@ -293,7 +293,7 @@ async function validarTipoUsuario(tipousuario){
       "Ciclista": 4
     };
   
-    return tiposDeUsuario[tipousuario];
+    return parseInt(tiposDeUsuario[tipousuario],10);
   }catch (error) {
     console.error(error.message);
     return error.message;
