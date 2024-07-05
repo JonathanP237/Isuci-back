@@ -429,7 +429,7 @@ app.post("/registro", async (req, res) => {
       break;
   }
 }*/
-
+//
 async function ValidarEspecialidad(idespecialidad){
   try {
     const result = await pool.query("SELECT * FROM especialidades WHERE idespecialidad = $1 LIMIT 1", [idespecialidad]);
