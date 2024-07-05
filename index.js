@@ -299,13 +299,13 @@ async function validarCantidadRegistros(){
 async function validarTipoUsuario(tipousuario){
   console.log(tipousuario);
   let idtipousuario = 0;
-  if(tipousuario === "Masajista"){
+  if(tipousuario == "Masajista"){
     idtipousuario = 1;
-  }else if(tipousuario === "Administrador"){
+  }else if(tipousuario == "Administrador"){
     idtipousuario = 2;
-  }else if(tipousuario === "Director de escuadra"){
+  }else if(tipousuario == "Director de escuadra"){
     idtipousuario = 3;
-  }else if(tipousuario === "Ciclista"){
+  }else if(tipousuario == "Ciclista"){
     idtipousuario = 4;
   }
   return idtipousuario;
@@ -329,7 +329,7 @@ app.post("/registro", async (req, res) => {
     `;
 
     const valores = [
-      parseInt(req.body.iddocumento,10), parseInt(req.body.iddocumento,10), parseInt(await idtipousuario,10), null, null, null, req.body.documentousuario, req.body.nombreusuario,
+      parseInt(req.body.iddocumento,10), parseInt(req.body.iddocumento,10), parseInt(idtipousuario,10), null, null, null, req.body.documentousuario, req.body.nombreusuario,
       req.body.apellidousuario, req.body.generousuario, req.body.fechanacimiento, req.body.correousuario, hashedPassword, 
       req.body.nacionalidad, null, null, null, null, null, null, req.body.fechainiciocarrera, null
     ];
