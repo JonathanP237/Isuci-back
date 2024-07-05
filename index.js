@@ -305,11 +305,11 @@ async function validarTipoUsuario(tipousuario){
     const tiposDeUsuario = {
       "Masajista": 1,
       "Administrador": 2,
-      "Director": 3,
+      "Director de escuadra": 3,
       "Ciclista": 4
     };
   
-    return parseInt(tiposDeUsuario[tipousuario],10);
+    return tiposDeUsuario[tipousuario];
   }catch (error) {
     console.error(error.message);
     return error.message;
@@ -319,7 +319,6 @@ async function validarTipoUsuario(tipousuario){
 app.post("/registro", async (req, res) => {
   const { contrasenausuario } = req.body;
   const { cantidadRegistros } = await validarCantidadRegistros();
-  const nuevoID = parseInt(cantidadRegistros,10) + 1;
   const {tipousuario} = req.body;
   const {idtipousuario} = await validarTipoUsuario(tipousuario);
   try {
@@ -335,7 +334,7 @@ app.post("/registro", async (req, res) => {
     `;
 
     const valores = [
-      parseInt(req.body.iddocumento,10), parseInt(req.body.iddocumento,10), idtipousuario, null, null, null, req.body.documentousuario, req.body.nombreusuario,
+      parseInt(req.body.iddocumento,10), parseInt(req.body.iddocumento,10), parseInt(idtipousuario,10), null, null, null, req.body.documentousuario, req.body.nombreusuario,
       req.body.apellidousuario, req.body.generousuario, req.body.fechanacimiento, req.body.correousuario, hashedPassword, 
       req.body.nacionalidad, null, null, null, null, null, null, req.body.fechainiciocarrera, null
     ];
