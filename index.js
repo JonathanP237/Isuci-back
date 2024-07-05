@@ -318,9 +318,9 @@ async function validarTipoUsuario(tipousuario){
 
 app.post("/registro", async (req, res) => {
   const { contrasenausuario } = req.body;
-  const { cantidadRegistros } = await validarCantidadRegistros();
   const {tipousuario} = req.body;
   const {idtipousuario} = await validarTipoUsuario(tipousuario);
+  console.log(tipousuario);
   try {
     // Hashing de la contraseña
     const hashedPassword = await bcrypt.hash(contrasenausuario, saltRounds);
