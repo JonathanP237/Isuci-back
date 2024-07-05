@@ -15,6 +15,7 @@ import nodemailer from 'nodemailer';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
+import e from 'express';
 
 config();
 
@@ -296,23 +297,14 @@ async function validarCantidadRegistros(){
 }
 
 async function validarTipoUsuario(tipousuario){
-  try {
-    const result = await pool.query("SELECT * FROM tipousuario WHERE destipousuario = $1 LIMIT 1", [tipousuario]);
-    if (result.rows.length === 0) {
-      throw new Error("No registra tipo usuario");
-    }
-    
-    const tiposDeUsuario = {
-      "Masajista": 1,
-      "Administrador": 2,
-      "Director de escuadra": 3,
-      "Ciclista": 4
-    };
-  
-    return tiposDeUsuario[tipousuario];
-  }catch (error) {
-    console.error(error.message);
-    return error.message;
+  if(tipousuario === "Masajista"){
+    return 1;
+  }else if(tipousuario === "Administrador"){
+    return 2;
+  }else if(tipousuario === "Director de escuadra"){
+    return 3;
+  }else if(tipousuario === "Ciclista"){
+    return 4;
   }
 }
 
