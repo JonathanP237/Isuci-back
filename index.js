@@ -297,15 +297,18 @@ async function validarCantidadRegistros(){
 }
 
 async function validarTipoUsuario(tipousuario){
+  console.log(tipousuario);
+  let idtipousuario = 0;
   if(tipousuario === "Masajista"){
-    return 1;
+    idtipousuario = 1;
   }else if(tipousuario === "Administrador"){
-    return 2;
+    idtipousuario = 2;
   }else if(tipousuario === "Director de escuadra"){
-    return 3;
+    idtipousuario = 3;
   }else if(tipousuario === "Ciclista"){
-    return 4;
+    idtipousuario = 4;
   }
+  return idtipousuario;
 }
 
 app.post("/registro", async (req, res) => {
