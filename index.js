@@ -557,7 +557,6 @@ app.get("/perfil", (req, res) => {
 });
 
 app.get("/ciclistas", (req, res) => {
-  const ciclistas = 
   return res.json({ message: "Ciclistas obtenidos" });
 });
 
