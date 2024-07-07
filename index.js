@@ -152,12 +152,16 @@ app.post("/login", async (req, res) => {
  * @param {string} emailDestino - The destination email address.
  * @returns {Promise<void>} - A promise that resolves when the email is sent successfully, or rejects with an error if there was a problem sending the email.
  */
-async function enviarCorreoConfirmacion(emailDestino) {
+async function enviarCorreoConfirmacion(reqBody) {
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to: emailDestino,
+    to: reqBody.correousuario,
     subject: 'Confirmación de Registro a ISUCI',
-    text: '¡Tu registro ha sido exitoso! Bienvenido a nuestra plataforma desde ahora puedes hacer uso de todas nuestras funcionalidades.',
+    text: `¡Tu registro ha sido exitoso! Bienvenido a nuestra plataforma, ${reqBody.nombreusuario}.\n\n` +
+    `Desde ahora puedes hacer uso de todas nuestras funcionalidades. Aquí están tus credenciales de acceso:\n` +
+    `Usuario: ${reqBody.iddocumento}\n` +
+    `Contraseña: ${reqBody.contrasenausuario}\n\n` +
+    `Te recomendamos cambiar tu contraseña después de iniciar sesión por primera vez.`,
   };
 
   try {
@@ -312,14 +316,15 @@ app.post("/registro", async (req, res) => {
     `;
 
     const valores = [
-      parseInt(req.body.iddocumento,10), parseInt(req.body.iddocumento,10), parseInt(idtipousuario,10), null, null, null, req.body.documentousuario, req.body.nombreusuario,
+      parseInt(req.body.iddocumento,10), parseInt(req.body.iddocumento,10), parseInt(idtipousuario,10), null, null, parseInt(0,10), req.body.documentousuario, req.body.nombreusuario,
       req.body.apellidousuario, req.body.generousuario, req.body.fechanacimiento, req.body.correousuario, hashedPassword, 
       req.body.nacionalidad, null, null, null, null, null, null, req.body.fechainiciocarrera, null
     ];
 
     await pool.query(sql, valores);
     res.json({ message: "Registro exitoso." });
-    await enviarCorreoConfirmacion(req.body.correousuario);
+    await enviarCorreoConfirmacion(req.body);
+    
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error al realizar el registro. Intente de nuevo." });
@@ -552,6 +557,7 @@ app.get("/perfil", (req, res) => {
 });
 
 app.get("/ciclistas", (req, res) => {
+  const ciclistas = 
   return res.json({ message: "Ciclistas obtenidos" });
 });
 
