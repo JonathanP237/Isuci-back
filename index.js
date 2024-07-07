@@ -83,23 +83,7 @@ async function autUsuario(usuario, contrasenaIngresada) {
   return false;
 }
 
-async function hashPasswords() {
-  try {
-    const users = await pool.query('SELECT idusuario, contrasenausuario FROM usuario'); // Obtener todos los usuarios y sus contraseñas
-
-    for (let user of users.rows) {
-      const hashedPassword = await bcrypt.hash(user.contrasenausuario, saltRounds); // Hashear la contraseña
-      await pool.query('UPDATE usuario SET contrasenausuario = $1 WHERE idusuario = $2', [hashedPassword, user.idusuario]); // Actualizar la contraseña hasheada en la base de datos
-    }
-
-    console.log('Todas las contraseñas han sido hasheadas y actualizadas.');
-  } catch (error) {
-    console.error('Error al hashear las contraseñas:', error);
-  }
-}
-
 app.get("/api", (req, res) => {
-  hashPasswords()
   res.json({ message: "Hello from server!" });
 });
 
