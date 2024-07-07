@@ -160,8 +160,7 @@ async function enviarCorreoConfirmacion(reqBody) {
     text: `¡Tu registro ha sido exitoso! Bienvenido a nuestra plataforma, ${reqBody.nombreusuario}.\n\n` +
     `Desde ahora puedes hacer uso de todas nuestras funcionalidades. Aquí están tus credenciales de acceso:\n` +
     `Usuario: ${reqBody.iddocumento}\n` +
-    `Contraseña: ${reqBody.contrasenausuario}\n\n` +
-    `Te recomendamos cambiar tu contraseña después de iniciar sesión por primera vez.`,
+    `Contraseña: ${reqBody.contrasenausuario}\n\n`,
   };
 
   try {
