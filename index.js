@@ -15,7 +15,6 @@ import nodemailer from 'nodemailer';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
-import e from 'express';
 
 config();
 
@@ -550,6 +549,16 @@ app.get("/perfil", (req, res) => {
   }*/
 
   return ValidarDatosPerfil1(res);
+});
+
+app.get("/ciclistas-libres"), (req, res) => {
+
+  return res.json({ message: "Ciclistas libres" });
+};
+
+app.post("/crear-escuadra", async (req, res) => {
+
+  return res.json({ message: "Escuadra creada" });
 });
 
 app.listen(PORT, () => {
