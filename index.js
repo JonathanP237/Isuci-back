@@ -551,9 +551,8 @@ app.get("/perfil", (req, res) => {
   return ValidarDatosPerfil1(res);
 });
 
-app.get("/ciclistas-libres"), (req, res) => {
-
-  return res.json({ message: "Ciclistas libres" });
+app.get("/ciclistas"), (req, res) =>{
+  return res.json({ message: "Ciclistas obtenidos" });
 };
 
 app.post("/crear-escuadra", async (req, res) => {
