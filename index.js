@@ -555,8 +555,15 @@ app.get("/perfil", (req, res) => {
   return ValidarDatosPerfil1(res);
 });
 
-app.get("/ciclistas", (req, res) => {
-  return res.json({ message: "Ciclistas obtenidos" });
+app.get("/ciclistasLibres", (req, res) => {
+  const sql = `SELECT nombre, apellido, iddocumento, idespecialidad, nacionalidad FROM usuario WHERE idtipousuario = 4 AND idescuadra = 0`;
+  pool.query(sql, (error, result) => {
+    if (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Error al obtener los ciclistas." });
+    }
+    res.json(result.rows);
+  });
 });
 
 app.post("/crear-escuadra", async (req, res) => {
