@@ -556,7 +556,7 @@ app.get("/perfil", (req, res) => {
 });
 
 app.get("/ciclistasLibres", (req, res) => {
-  const sql = `SELECT nombre, apellido, iddocumento, idespecialidad, nacionalidad FROM usuario WHERE idtipousuario = 4 AND idescuadra = 0`;
+  const sql = `SELECT nombreusuario, apellidousuario, iddocumento, idespecialidad, nacionalidad FROM usuario WHERE idtipousuario = 4 AND idescuadra = 0`;
   pool.query(sql, (error, result) => {
     if (error) {
       console.error(error);
