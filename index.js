@@ -442,6 +442,21 @@ async function ValidarNombreEscuadra(idescuadra){
   }
 }
 
+async function validarTipoContextura(idtipocontextura){
+  try {
+    const result = await pool.query("SELECT * FROM tipocontextura WHERE idtipocontextura = $1 LIMIT 1", [idtipocontextura]);
+    if (result.rows.length === 0) {
+      throw new Error("Tipo contextura no encontrado");
+    }
+    const nombreTipoContextura = result.rows[0].destipocontextura;
+    return nombreTipoContextura;
+  } catch (error) {
+    // Aquí puedes manejar el error como prefieras, por ejemplo, devolver un mensaje de error
+    console.error(error.message);
+    return "No registrado en ninguna"; // O manejarlo de otra manera
+  }
+}
+
 async function ValidarAñosExperiencia(fechainiciocarrera){
   const fechaActual = new Date();
   return fechaActual.getFullYear() - fechainiciocarrera.getFullYear();
@@ -459,6 +474,7 @@ async function ValidarDatosPerfil1(res) {
     const nombreEscuadra = await ValidarNombreEscuadra(usuarioActual.idescuadra);
     const nombreEspecialidad = await ValidarEspecialidad(usuarioActual.idespecialidad);
     const anosexperiencia = await ValidarAñosExperiencia(usuarioActual.fechainiciocarrera);
+    const nombreTipoContextura = await validarTipoContextura(usuarioActual.idtipocontextura);
     switch (idTipoUsuario) {
       case 1:
       case 3:
@@ -487,7 +503,7 @@ async function ValidarDatosPerfil1(res) {
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
           idescuadra: usuarioActual.idescuadra,
-          idtipocontextura: usuarioActual.idtipocontextura,
+          idtipocontextura: nombreTipoContextura,
           idespecialidad: usuarioActual.idespecialidad,
           generousuario: usuarioActual.generousuario,
           pesousuario: usuarioActual.pesousuario,
