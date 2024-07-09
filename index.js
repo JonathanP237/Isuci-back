@@ -442,6 +442,11 @@ async function ValidarNombreEscuadra(idescuadra){
   }
 }
 
+async function ValidarAñosExperiencia(fechainiciocarrera){
+  const fechaActual = new Date();
+  return fechaActual.getFullYear() - fechainiciocarrera.getFullYear();
+}
+
 async function ValidarDatosPerfil1(res) {
   try {    
     const result = await pool.query("SELECT * FROM usuario WHERE iddocumento = $1 LIMIT 1", [usuarioLogin.iddocumento]);
@@ -453,6 +458,7 @@ async function ValidarDatosPerfil1(res) {
     const idTipoUsuario = parseInt(usuarioActual.idtipousuario);
     const nombreEscuadra = await ValidarNombreEscuadra(usuarioActual.idescuadra);
     const nombreEspecialidad = await ValidarEspecialidad(usuarioActual.idespecialidad);
+    const anosexperiencia = await ValidarAñosExperiencia(usuarioActual.fechainiciocarrera);
     switch (idTipoUsuario) {
       case 1:
       case 3:
@@ -466,7 +472,7 @@ async function ValidarDatosPerfil1(res) {
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
           idescuadra: usuarioActual.idescuadra,
-          anosexperiencia: usuarioActual.fechainiciocarrera,
+          anosexperiencia: anosexperiencia,
           nombreEscuadra: nombreEscuadra
         });
         break;
@@ -543,20 +549,12 @@ async function ValidarDatosPerfil1(res) {
  *     description: No tienes permiso para ver este perfil.
  */
 app.get("/perfil", (req, res) => {
-  /*if (!usuarioActual) {
-    return res.status(401).json({ message: "No has iniciado sesión." });
-  }
-
-  // Asegurarse de que el iddocumento del usuarioActual coincide con el parámetro de la ruta
-  if (req.params.iddocumento !== usuarioActual.iddocumento) {
-    return res.status(403).json({ message: "No tienes permiso para ver este perfil." });
-  }*/
-
   return ValidarDatosPerfil1(res);
 });
 
-app.get("/ciclistasLibres", (req, res) => {
-  const sql = `SELECT nombreusuario, apellidousuario, iddocumento, idespecialidad, nacionalidad FROM usuario WHERE idtipousuario = 4 AND idescuadra = 0`;
+app.post("/ciclistasLibres", (req, res) => {
+  const sql = `SELECT nombreusuario, apellidousuario, iddocumento, idespecialidad, nacionalidad FROM usuario WHERE idtipousuario = 4 AND idescuadra = 0 
+  AND generousuario = ${req.body.generousuario}`;
   pool.query(sql, (error, result) => {
     if (error) {
       console.error(error);
