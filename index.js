@@ -496,7 +496,7 @@ async function ValidarDatosPerfil1(res) {
           velocidadpromediousuario: usuarioActual.velocidadpromediousuario,
           velocidadmaximausuario: usuarioActual.velocidadmaximausuario,
           tiempociclista: usuarioActual.tiempociclista,
-          anosexperiencia: usuarioActual.fechainiciocarrera,
+          anosexperiencia: anosexperiencia,
           gradorampa: usuarioActual.gradorampa,
           nombreEscuadra: nombreEscuadra,
           nombreEspecialidad: nombreEspecialidad
