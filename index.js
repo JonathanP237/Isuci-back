@@ -50,7 +50,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json()); //// Esto es crucial
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:3000', // Asegúrate de que este origen sea el correcto
+  methods: ["GET", "POST", "PUT", "DELETE"], // Métodos HTTP permitidos para CORS
+  allowedHeaders: ["Content-Type", "Authorization"], // Encabezados permitidos
+  credentials: true, // Permite cookies de origen cruzado
 }));
 
 
