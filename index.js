@@ -449,6 +449,7 @@ async function ValidarDatosPerfil1(res) {
           idpais: usuarioActual.nacionalidad,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
+          anosexperiencia: parseInt(anosexperiencia,10),
         });
         break;
       default:
