@@ -378,9 +378,17 @@ async function validarTipoContextura(idtipocontextura){
   }
 }
 
-async function ValidarAñosExperiencia(fechainiciocarrera){
-  const fechaActual = new Date();
-  return fechaActual.getFullYear() - fechainiciocarrera.getFullYear();
+async function ValidarAñosExperiencia(fechaInicioCarrera) {
+  if (fechaInicioCarrera === null) {
+    // Maneja el caso en que fechaInicioCarrera es null
+    // Por ejemplo, podrías retornar 0 o lanzar un error específico
+    return 0; // O manejarlo de la manera que consideres más adecuada
+  } else {
+    const fechaInicio = new Date(fechaInicioCarrera);
+    const añoActual = new Date().getFullYear();
+    const añosExperiencia = añoActual - fechaInicio.getFullYear();
+    return añosExperiencia;
+  }
 }
 
 async function ValidarDatosPerfil1(res) {
@@ -449,7 +457,6 @@ async function ValidarDatosPerfil1(res) {
           idpais: usuarioActual.nacionalidad,
           telefonousuario: usuarioActual.telefonousuario,
           direccionusuario: usuarioActual.direccionusuario,
-          anosexperiencia: parseInt(anosexperiencia,10),
         });
         break;
       default:
